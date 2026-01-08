@@ -1,0 +1,75 @@
+{
+    "name": "industrialdev/wicket-wp-financial-fields",
+    "description": "Wicket Financial Fields - Finance mapping and deferred revenue system for WooCommerce",
+    "version": "1.0.0",
+    "type": "wordpress-plugin",
+    "keywords": [
+        "wordpress",
+        "woocommerce",
+        "finance",
+        "gl-code",
+        "revenue-deferral",
+        "memberships"
+    ],
+    "homepage": "https://github.com/industrialdev/wicket-wp-financial-fields",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Wicket Inc.",
+            "email": "info@wicket.io",
+            "homepage": "https://wicket.io"
+        }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "estebanforge/hyperpress": "^3"
+    },
+    "require-dev": {
+        "brain/monkey": "^2",
+        "friendsofphp/php-cs-fixer": "^3",
+        "pestphp/pest": "^4",
+        "pestphp/pest-plugin-browser": "^4",
+        "phpunit/phpunit": "^12"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wicket\\Finance\\": "src/"
+        },
+        "classmap": [
+            "src/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/",
+            "Wicket\\Finance\\Tests\\": "tests/unit/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test:unit": "pest --testsuite unit",
+        "test:coverage": "pest --coverage-html coverage",
+        "test:browser": "WICKET_BROWSER_BASE_URL=https://localhost ./vendor/bin/pest tests/Browser",
+        "lint": "php-cs-fixer fix --dry-run --diff",
+        "format": "php-cs-fixer fix",
+        "check": [
+            "@lint",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "RC",
+    "prefer-stable": true,
+    "scripts-descriptions": {
+        "test": "Run Pest tests",
+        "test:coverage": "Run Pest tests with HTML coverage report",
+        "test:browser": "Run Pest browser tests against https://localhost",
+        "lint": "Run PHP CS Fixer to check coding standards",
+        "format": "Run PHP CS Fixer to fix coding standards issues"
+    }
+}
