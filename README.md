@@ -244,9 +244,13 @@ composer test:unit
 # Coverage report
 composer test:coverage
 
-# Browser tests
+# Browser tests (requires local WordPress instance with Wicket Docker setup)
 composer test:browser
 ```
+
+**Note:** Browser tests require a local WordPress instance running with the Wicket Docker setup. Ensure you have a site (e.g., PACE or any other) running locally before executing browser tests.
+
+**Playwright Setup:** Install Playwright globally if desired: `npm install -g playwright@latest && npx playwright install`
 
 ### Available Composer Scripts
 
