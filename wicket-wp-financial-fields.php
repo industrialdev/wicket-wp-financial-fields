@@ -15,7 +15,7 @@
  * Text Domain: wicket-finance
  * Domain Path: /languages
  * License: GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html.
  */
 
 declare(strict_types=1);
@@ -97,7 +97,7 @@ function wicket_finance_missing_dependencies_notice(): void
                         implode(', ', $missing)
                     )
                 );
-                ?>
+        ?>
             </p>
         </div>
         <?php
@@ -126,11 +126,12 @@ add_action(
         // Check dependencies
         if (!wicket_finance_is_woocommerce_active() || !wicket_finance_is_base_plugin_active() || !wicket_finance_is_memberships_active()) {
             add_action('admin_notices', 'wicket_finance_missing_dependencies_notice');
+
             return;
         }
 
         // Initialize plugin
-        \Wicket\Finance\Plugin::get_instance()->plugin_setup();
+        Wicket\Finance\Plugin::get_instance()->plugin_setup();
     }
 );
 

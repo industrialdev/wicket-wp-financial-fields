@@ -152,6 +152,7 @@ describe('Eligibility', function () {
                 if ($hook === 'wicket/finance/membership_categories') {
                     return ['membership', 'custom-membership'];
                 }
+
                 return $value;
             });
 
@@ -178,6 +179,7 @@ describe('Eligibility', function () {
             $callCount = 0;
             Functions\when('apply_filters')->alias(function () use (&$callCount) {
                 $callCount++;
+
                 return ['membership'];
             });
 

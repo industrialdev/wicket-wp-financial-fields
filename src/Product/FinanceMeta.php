@@ -123,13 +123,13 @@ class FinanceMeta
                     'value' => $product->get_meta('_wicket_finance_gl_code', true),
                 ]);
 
-                woocommerce_wp_checkbox([
-                    'id' => '_wicket_finance_deferred_required',
-                    'label' => __('Deferred revenue required', 'wicket-finance'),
-                    'description' => __('Select if this product will use a deferred revenue schedule in your financial management system.', 'wicket-finance'),
-                    'value' => $product->get_meta('_wicket_finance_deferred_required', true) === 'yes' ? 'yes' : 'no',
-                ]);
-                ?>
+        woocommerce_wp_checkbox([
+            'id' => '_wicket_finance_deferred_required',
+            'label' => __('Deferred revenue required', 'wicket-finance'),
+            'description' => __('Select if this product will use a deferred revenue schedule in your financial management system.', 'wicket-finance'),
+            'value' => $product->get_meta('_wicket_finance_deferred_required', true) === 'yes' ? 'yes' : 'no',
+        ]);
+        ?>
             </div>
         </div>
         <?php
@@ -167,16 +167,16 @@ class FinanceMeta
                 ],
             ]);
 
-            woocommerce_wp_text_input([
-                'id' => '_wicket_finance_deferral_end_date',
-                'label' => __('Deferral End Date', 'wicket-finance'),
-                'type' => 'date',
-                'value' => $product->get_meta('_wicket_finance_deferral_end_date', true),
-                'custom_attributes' => [
-                    'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
-                ],
-            ]);
-            ?>
+        woocommerce_wp_text_input([
+            'id' => '_wicket_finance_deferral_end_date',
+            'label' => __('Deferral End Date', 'wicket-finance'),
+            'type' => 'date',
+            'value' => $product->get_meta('_wicket_finance_deferral_end_date', true),
+            'custom_attributes' => [
+                'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+            ],
+        ]);
+        ?>
         </div>
         <?php
     }
@@ -216,18 +216,18 @@ class FinanceMeta
                 ],
             ]);
 
-            woocommerce_wp_text_input([
-                'id' => "_wicket_finance_deferral_end_date_{$loop}",
-                'name' => "variable_wicket_finance_deferral_end_date[{$loop}]",
-                'label' => __('Deferral End Date', 'wicket-finance'),
-                'type' => 'date',
-                'value' => $variation_obj->get_meta('_wicket_finance_deferral_end_date', true),
-                'wrapper_class' => 'form-row form-row-last',
-                'custom_attributes' => [
-                    'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
-                ],
-            ]);
-            ?>
+        woocommerce_wp_text_input([
+            'id' => "_wicket_finance_deferral_end_date_{$loop}",
+            'name' => "variable_wicket_finance_deferral_end_date[{$loop}]",
+            'label' => __('Deferral End Date', 'wicket-finance'),
+            'type' => 'date',
+            'value' => $variation_obj->get_meta('_wicket_finance_deferral_end_date', true),
+            'wrapper_class' => 'form-row form-row-last',
+            'custom_attributes' => [
+                'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+            ],
+        ]);
+        ?>
         </div>
         <?php
     }

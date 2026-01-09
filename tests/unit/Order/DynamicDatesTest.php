@@ -9,7 +9,6 @@ use Mockery;
 use Wicket\Finance\Order\DynamicDates;
 use Wicket\Finance\Order\LineItemMeta;
 use Wicket\Finance\Settings\FinanceSettings;
-use Wicket\Finance\Support\DateFormatter;
 use Wicket\Finance\Support\Eligibility;
 use Wicket\Finance\Support\Logger;
 use Wicket\Finance\Support\MembershipGateway;

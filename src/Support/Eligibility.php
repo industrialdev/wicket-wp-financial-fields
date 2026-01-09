@@ -221,7 +221,7 @@ class Eligibility
 
         $categories = [self::DEFAULT_MEMBERSHIP_CATEGORY];
 
-        /**
+        /*
          * Filters the membership category slugs.
          *
          * Allows clients to extend or override the default membership category.

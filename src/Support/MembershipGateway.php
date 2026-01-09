@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Wicket\Finance\Support;
 
-use Wicket_Memberships\Membership_Controller;
 use Wicket_Memberships\Membership_Config;
+use Wicket_Memberships\Membership_Controller;
 
 /**
  * Membership gateway facade.

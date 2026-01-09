@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Wicket\Finance\Display;
 
 use Wicket\Finance\Settings\FinanceSettings;
-use Wicket\Finance\Support\Eligibility;
 use Wicket\Finance\Support\DateFormatter;
+use Wicket\Finance\Support\Eligibility;
 use Wicket\Finance\Support\Logger;
 
 /**

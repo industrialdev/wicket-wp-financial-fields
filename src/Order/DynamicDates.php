@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Wicket\Finance\Order;
 
 use Wicket\Finance\Settings\FinanceSettings;
+use Wicket\Finance\Support\DateFormatter;
 use Wicket\Finance\Support\Eligibility;
 use Wicket\Finance\Support\Logger;
 use Wicket\Finance\Support\MembershipGateway;
-use Wicket\Finance\Support\DateFormatter;
 
 /**
  * Dynamic dates service.
@@ -177,6 +177,7 @@ class DynamicDates
                 'order_id' => $order_id,
                 'product_id' => $product_id,
             ]);
+
             return;
         }
 
@@ -188,6 +189,7 @@ class DynamicDates
                 'membership_post_id' => $membership_post_id,
                 'order_id' => $order_id,
             ]);
+
             return;
         }
 
@@ -200,6 +202,7 @@ class DynamicDates
                 'membership_post_id' => $membership_post_id,
                 'raw_dates' => $dates,
             ]);
+
             return;
         }
 
@@ -210,6 +213,7 @@ class DynamicDates
                 'order_id' => $order_id,
                 'membership_post_id' => $membership_post_id,
             ]);
+
             return;
         }
 
@@ -261,6 +265,7 @@ class DynamicDates
                 'order_id' => $order_id,
                 'status' => $status,
             ]);
+
             return;
         }
 

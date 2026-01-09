@@ -49,6 +49,7 @@ describe('FinanceSettings', function () {
                 if ($option === 'wicket_finance_enable_system') {
                     return '1';
                 }
+
                 return ['5', '10', '15'];
             });
 
@@ -64,6 +65,7 @@ describe('FinanceSettings', function () {
                 if ($option === 'wicket_finance_enable_system') {
                     return '1';
                 }
+
                 return 'invalid';
             });
 
@@ -83,6 +85,7 @@ describe('FinanceSettings', function () {
                 if ($option === 'wicket_finance_enable_system') {
                     return '1';
                 }
+
                 return in_array($option, [
                     'wicket_finance_display_order_confirmation',
                     'wicket_finance_display_my_account',
@@ -112,6 +115,7 @@ describe('FinanceSettings', function () {
                 if ($option === 'wicket_finance_enable_system') {
                     return '1';
                 }
+
                 return '0';
             });
 
@@ -125,6 +129,7 @@ describe('FinanceSettings', function () {
                 if ($option === 'wicket_finance_enable_system') {
                     return '1';
                 }
+
                 return in_array($option, [
                     'wicket_finance_trigger_draft',
                     'wicket_finance_trigger_pending',
@@ -149,6 +154,7 @@ describe('FinanceSettings', function () {
                 if ($option === 'wicket_finance_enable_system') {
                     return '1';
                 }
+
                 return $option === 'wicket_finance_display_order_confirmation' ? '1' : '0';
             });
 
@@ -163,6 +169,7 @@ describe('FinanceSettings', function () {
                 if ($option === 'wicket_finance_enable_system') {
                     return '1';
                 }
+
                 return $option === 'wicket_finance_trigger_draft' ? '1' : '0';
             });
 

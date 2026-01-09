@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Wicket\Finance;
 
-use Wicket\Finance\Settings\FinanceSettings;
-use Wicket\Finance\Settings\WPSettingsSettings;
-use Wicket\Finance\Product\FinanceMeta;
-use Wicket\Finance\Order\LineItemMeta;
-use Wicket\Finance\Order\DynamicDates;
 use Wicket\Finance\Display\CustomerRenderer;
 use Wicket\Finance\Export\WooExportAdapter;
-use Wicket\Finance\Support\Logger;
-use Wicket\Finance\Support\Eligibility;
+use Wicket\Finance\Order\DynamicDates;
+use Wicket\Finance\Order\LineItemMeta;
+use Wicket\Finance\Product\FinanceMeta;
+use Wicket\Finance\Settings\FinanceSettings;
+use Wicket\Finance\Settings\WPSettingsSettings;
 use Wicket\Finance\Support\DateFormatter;
+use Wicket\Finance\Support\Eligibility;
+use Wicket\Finance\Support\Logger;
 use Wicket\Finance\Support\MembershipGateway;
 
 /**
@@ -114,7 +114,7 @@ class Plugin
      *
      * @return Plugin
      */
-    public static function get_instance(): Plugin
+    public static function get_instance(): self
     {
         if (null === self::$instance) {
             self::$instance = new self();

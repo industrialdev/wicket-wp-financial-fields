@@ -60,7 +60,6 @@ class WPSettingsSettings
         add_action('admin_menu', [$this, 'reorder_submenu'], 999);
     }
 
-
     /**
      * Ensure Finance appears after Wicket Settings in the submenu.
      *
@@ -180,7 +179,6 @@ class WPSettingsSettings
 
         return 'wicket-settings';
     }
-
 
     /**
      * Register the Finance settings page using WPSettings.
