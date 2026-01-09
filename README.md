@@ -217,19 +217,48 @@ composer lint
 composer format
 ```
 
-### Testing
+### ⚠️ IMPORTANT: Before Tagging a New Version
 
-Uses Pest PHP testing framework:
+**Always run `composer production` before tagging a new version.** This command:
+- Removes development dependencies
+- Optimizes autoloader for production
+- Generates a clean build without dev packages
 
 ```bash
-# Unit tests
+composer production
+```
+
+Without this step, the plugin will include unnecessary dev dependencies in the release.
+
+### Testing
+
+Uses **PEST** and **PHPUnit** testing frameworks:
+
+```bash
+# Run all tests
+composer test
+
+# Unit tests only
 composer test:unit
 
 # Coverage report
 composer test:coverage
 
-# Browser tests (requires Playwright)
+# Browser tests
 composer test:browser
+```
+
+### Available Composer Scripts
+
+```bash
+composer production       # Build for production (remove dev deps, optimize autoload)
+composer test            # Run all tests
+composer test:unit       # Run unit tests only
+composer test:coverage   # Run tests with HTML coverage report
+composer test:browser    # Run browser tests
+composer lint            # Check code style
+composer format          # Fix code style
+composer check           # Run lint + test
 ```
 
 ## Support
