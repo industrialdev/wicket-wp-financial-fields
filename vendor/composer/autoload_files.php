@@ -40,9 +40,6 @@ return array(
     '3ff3609f8c8173833eaa97521a843531' => $vendorDir . '/amphp/http-server/src/Middleware/functions.php',
     'a56027adf84a32da155734de2d858e65' => $vendorDir . '/amphp/http-server/src/functions.php',
     '4be4fbd9f5a89207b1fd1c85ae339dd7' => $vendorDir . '/amphp/websocket-client/src/functions.php',
-    '13f65e44352b0407f05cb5a5e174612b' => $vendorDir . '/estebanforge/hyperfields/includes/helpers.php',
-    '0522701f5d113a2ff6373ccc834dd7d6' => $vendorDir . '/estebanforge/hyperfields/includes/backward-compatibility.php',
-    'c1c635284e1ca7836efff979fb09390f' => $vendorDir . '/estebanforge/hyperfields/bootstrap.php',
     'c72349b1fe8d0deeedd3a52e8aa814d8' => $vendorDir . '/mockery/mockery/library/helpers.php',
     'ce9671a430e4846b44e1c68c7611f9f5' => $vendorDir . '/mockery/mockery/library/Mockery.php',
     'f83ed111c2f97a0449abf067f157f418' => $vendorDir . '/pestphp/pest/src/Functions.php',
@@ -51,6 +48,5 @@ return array(
     '23c18046f52bef3eea034657bafda50f' => $vendorDir . '/symfony/polyfill-php81/bootstrap.php',
     '9d2b9fc6db0f153a0a149fefb182415e' => $vendorDir . '/symfony/polyfill-php84/bootstrap.php',
     '051bafe20e2674435a162870efa2d2a7' => $vendorDir . '/brain/monkey/inc/api.php',
-    'b4e0b991acd5ddad926ebc747d73282f' => $vendorDir . '/estebanforge/hyperpress/bootstrap.php',
     'c36fd1c938990508f9070c42a15a4af9' => $vendorDir . '/pestphp/pest-plugin-browser/src/Autoload.php',
 );

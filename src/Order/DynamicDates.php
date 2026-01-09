@@ -115,6 +115,10 @@ class DynamicDates
      */
     public function on_order_status_changed(int $order_id, string $old_status, string $new_status): void
     {
+        if (!$this->settings->is_system_enabled()) {
+            return;
+        }
+
         // Check if new status is a trigger
         if (!$this->settings->is_trigger_status($new_status)) {
             return;
@@ -132,6 +136,10 @@ class DynamicDates
      */
     public function on_order_created(int $order_id, \WC_Order $order): void
     {
+        if (!$this->settings->is_system_enabled()) {
+            return;
+        }
+
         $status = $order->get_status();
 
         // Check if initial status is a trigger
@@ -150,6 +158,10 @@ class DynamicDates
      */
     public function on_membership_created(array $membership, bool $processing_renewal, bool $status_cycled): void
     {
+        if (!$this->settings->is_system_enabled()) {
+            return;
+        }
+
         if (!$this->membership_gateway->is_available()) {
             return;
         }

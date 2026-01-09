@@ -27,7 +27,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 ### Classes
 - ✅ `Plugin` - Bootstrap and service orchestration
 - ✅ `Settings\FinanceSettings` - Typed getters for all settings
-- ✅ `Settings\HyperFieldsSettings` - Standalone Finance settings page via HyperFields API
+- ✅ `Settings\WPSettingsSettings` - Finance settings tab via WPSettings (Wicket Base Plugin)
 - ✅ `Product\FinanceMeta` - Finance Mapping tab, GL code, deferral dates, validation
 - ✅ `Order\LineItemMeta` - Auto-populate, admin fields, audit notes
 - ✅ `Order\DynamicDates` - Status triggers, membership integration
@@ -56,7 +56,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 - ✅ Labels: "Term Start Date:" / "Term End Date:"
 - ✅ CSV export integration (GL Code, Term Start Date, Term End Date)
 - ✅ Filter: `wicket/finance/membership_categories` (default: ['membership'])
-- ✅ HyperFields-based standalone settings page (under Wicket Settings)
+- ✅ WPSettings-based Finance settings tab (under Wicket Settings)
 
 ### Pending/Incomplete
 - ⏳ Unit tests (Pest framework installed, tests not written)
@@ -64,14 +64,13 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 
 ## Architecture
 
-- Scope: standalone plugin `wicket-wp-financial-fields` that integrates with WooCommerce and Wicket Memberships. Fully independent of Wicket Base Plugin.
+- Scope: standalone plugin `wicket-wp-financial-fields` that integrates with WooCommerce and Wicket Memberships and uses Wicket Base Plugin for settings UI.
 - Dependencies:
-  - HyperPress (`estebanforge/hyperpress`) - for HyperFields API
-  - HyperFields (`estebanforge/hyperfields`) - settings page builder
+  - Wicket Base Plugin (active plugin, WPSettings UI)
   - WooCommerce (active plugin)
   - Wicket Memberships (active plugin)
 - Layers:
-  - Settings: Standalone Finance settings page under "Wicket Settings" using HyperFields API + typed getters facade.
+  - Settings: Finance settings page under "Wicket Settings" using WPSettings + typed getters facade.
   - Product data: Finance Mapping tab, GL code, deferred flag, deferral defaults.
   - Order items: admin inputs, validation, meta persistence, audit notes.
   - Dynamic dates: membership-date writer triggered by order status and membership events.
@@ -80,7 +79,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 - Data model:
   - Product meta: `_wicket_finance_gl_code`, `_wicket_finance_deferred_required`, `_wicket_finance_deferral_start_date`, `_wicket_finance_deferral_end_date`.
   - Order item meta: `_wicket_finance_start_date`, `_wicket_finance_end_date`, `_wicket_finance_gl_code`.
-  - Settings options: `wicket_finance_*` stored in WordPress options table via HyperFields.
+- Settings options: `wicket_finance_*` stored in WordPress options table via WPSettings.
 - Eligibility rules:
   - Parent product categories determine eligibility for variations.
   - Membership category slug defaults to `membership` (hardcoded constant), extendable via filter hook for client customization.
@@ -97,7 +96,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 - Class map:
   - `Plugin` (bootstrap): registers hooks, loads services, owns plugin lifecycle.
   - `Settings\FinanceSettings` (facade): reads/writes options, exposes typed getters.
-  - `Settings\HyperFieldsSettings` (service): registers standalone Finance settings page via HyperFields API.
+  - `Settings\WPSettingsSettings` (service): registers Finance settings tab via WPSettings.
   - `Product\FinanceMeta` (service): manages product meta fields + validation.
   - `Order\LineItemMeta` (service): manages order item meta + audit notes.
   - `Order\DynamicDates` (service): writes membership dates on triggers.
@@ -127,22 +126,21 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
   - Order created/status change → `Order\DynamicDates` → `MembershipGateway` → line item meta updated + order note.
   - Membership created → `Order\DynamicDates` → `MembershipGateway` → authoritative dates overwrite line item meta + order note.
 - Data flow (read):
-  - Settings page → HyperFields API → WordPress options → `FinanceSettings` facade.
+  - Settings page → WPSettings → WordPress options → `FinanceSettings` facade.
   - Customer surfaces → `Display\CustomerRenderer` → `Eligibility` → `FinanceSettings` → formatted output.
   - Exports → `Export\WooExportAdapter` → line item meta values.
 
-## HyperFields Integration
+## WPSettings Integration
 
-- Settings page created via `HyperFields::makeOptionPage()` API.
-- Field types used: `checkbox`, `select` (multi-select), `text` (for help text).
+- Settings page registered via Wicket Base Plugin WPSettings.
+- Field types used: `checkbox`, `select-multiple`, `text` (for help text).
 - Fields organized into sections: Feature Control, Customer Visibility, Dynamic Triggers.
-- HyperFields loaded from `wp-content/plugins/hyperfields/bootstrap.php`.
-- Settings stored in WordPress options table with `wicket_finance_*` prefix.
+- Settings stored in `wicket_settings` with `wicket_finance_*` keys.
 - `FinanceSettings` facade provides typed getter methods for all settings values.
 
 ## Non-Goals
 
-- Integration with Wicket Base Plugin settings (this plugin is standalone).
+- Rebuild or refactor Wicket Base Plugin settings UI.
 - Rebuild or refactor unrelated Wicket Base Plugin behavior.
 - Introduce breaking changes without explicit approval.
 
@@ -151,8 +149,6 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 - Legacy implementation (for reference only): `reference-only-legacy/wicket-finance-settings.php`
 - Wicket Base Plugin: memberships and orders data flow.
 - `wicket-wp-guest-checkout`: structure/tooling conventions.
-- HyperFields: https://github.com/EstebanForge/HyperFields (settings API)
-- HyperPress: https://github.com/EstebanForge/HyperPress (HyperFields + hypermedia)
 
 ## Clarifications (From Product Direction)
 
@@ -160,12 +156,11 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 - Email surfaces: expose plugin options to configure which WooCommerce customer emails render deferral dates. All 8 email types are supported (see Email IDs below).
 - PDF invoices: support `woocommerce-pdf-invoices-packing-slips` exclusively; no other invoice plugins are supported.
 - Membership category: hardcoded constant `membership` with a filterable array configuration allowing clients to extend via filter hook (`wicket/finance/membership_categories`).
-- Settings location: Standalone "Finance" page under "Wicket Settings" using HyperFields API.
-- HyperPress/HyperFields used for settings UI.
-- Default behavior: when the plugin is enabled, the finance system is enabled by default.
+- Settings location: Finance page under "Wicket Settings" using WPSettings.
+- Default behavior: finance system is enabled by default on activation.
 - Email rendering: inject dates in both HTML and plain-text email templates.
 - Audit notes: use `system` for automated writes; include user display name for manual edits. Format: `[System] changed Term Start Date: 2024-01-01 → 2024-02-01` or `[John Doe] changed Term End Date: 2024-12-31 → 2025-01-15`.
-- Dependencies: WooCommerce, Wicket Memberships, HyperPress, and HyperFields are hard requirements.
+- Dependencies: WooCommerce, Wicket Memberships, and Wicket Base Plugin are hard requirements.
 - Variations inherit parent deferral defaults when variation values are empty.
 - GL Code lifecycle: copied to line item once at order creation; does not sync if product GL code changes later.
 - Processing status always triggers dynamic dates regardless of other trigger settings (core behavior, not just help text).
@@ -187,7 +182,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 
 - Text domain: `wicket-finance`
 - Filter/action hook pattern: `wicket/finance/{hook_name}` (e.g., `wicket/finance/membership_categories`, `wicket/finance/eligible_categories`)
-- Option keys: `wicket_finance_*` (e.g., `wicket_finance_visibility_surfaces`, `wicket_finance_trigger_statuses`)
+- Option keys: `wicket_finance_*` (e.g., `wicket_finance_enable_system`, `wicket_finance_display_emails`, `wicket_finance_trigger_processing`)
 
 ## Tooling Baseline (From wicket-wp-guest-checkout)
 
@@ -222,7 +217,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
   - ✅ Finance Mapping tab (WooCommerce Product Data)
   - ✅ GL Code + Deferred Revenue Required fields
   - ✅ Deferral dates (Simple + Variable products)
-  - 🚧 Settings UI (basic WordPress Settings API implemented, HyperFields integration pending)
+  - ✅ Settings UI (WPSettings integration in Wicket Base Plugin)
 - [x] **Order item handling**: write and validate finance meta at checkout and on order updates; ensure idempotency.
   - ✅ Auto-populate line items on order creation
   - ✅ Admin edit fields in order line items
@@ -232,7 +227,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
   - ✅ Order status triggers (configurable + Processing always)
   - ✅ Membership date calculation via `Membership_Config::get_membership_dates()`
   - ✅ ISO 8601 to Y-m-d conversion
-  - ⏳ Membership creation/update hooks (TODO)
+  - ✅ Membership creation/update hooks (authoritative dates overwrite)
 - [x] **Exports**: define export fields and integrate with WooCommerce export hooks/filters.
   - ✅ Export columns defined (GL Code, Term Start Date, Term End Date)
   - ✅ Export adapter hooks implemented
@@ -241,9 +236,9 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
   - ✅ Eligibility checks (category + surface + dates)
   - ✅ Order confirmation page display
   - ✅ My Account > Orders display
-  - 🚧 Email display (basic hook in place, 8 email types not individually tested)
-  - ⏳ Subscriptions display (pending WooCommerce Subscriptions integration)
-  - ⏳ PDF invoice display (pending woocommerce-pdf-invoices-packing-slips integration)
+  - 🚧 Email display (generic hook in place; 8 email types not individually verified)
+  - ✅ Subscriptions display (WooCommerce Subscriptions integration)
+  - ✅ PDF invoice display (supported invoice plugins)
 - [x] **Tooling**: bootstrap new plugin using guest-checkout conventions (composer, test, lint, ci scripts).
   - ✅ Composer configuration (PSR-4, dev dependencies)
   - ✅ 108 dependencies installed
@@ -266,7 +261,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 - 🚧 Testing pending (framework installed, tests not written)
 - ✅ Functionality reflects ASAE reference while being configurable and reusable
 - ⏳ No regressions verified (requires testing on live environment)
-- ✅ HyperFields integration for settings UI complete (standalone page)
+- ✅ WPSettings integration for settings UI complete (Finance page)
 - ✅ Membership creation/update hook integration complete
 - ✅ PDF invoice and subscriptions surface implementations complete
 
@@ -274,8 +269,8 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 
 **Implementation Status: ✅ Fully implemented**
 
-- ✅ A standalone `Finance` settings page is available under "Wicket Settings" using HyperFields API.
-  - ✅ Fully independent of Wicket Base Plugin
+- ✅ A `Finance` settings page is available under "Wicket Settings" using WPSettings.
+  - ✅ Uses Wicket Base Plugin settings UI
 - Under a heading `Revenue Deferral Dates`, there are configurable options for customer-facing visibility.
 - Subheading `Customer Visibility`.
 - Product categories eligible for displaying deferral dates to customers:
@@ -368,7 +363,7 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 
 **Implementation Status: ✅ Fully implemented**
 
-- ✅ A standalone `Finance` settings page is available under "Wicket Settings" using HyperFields API.
+- ✅ A `Finance` settings page is available under "Wicket Settings" using WPSettings.
 - Under `Revenue Deferral Dates`, add `Dynamic Deferral Dates Trigger`:
   - Help text: `Determines the Woo order status that triggers dynamic deferral dates to be written. Regardless of this setting, dates will always be written when the order reaches 'Processing' status.`
   - Checkboxes:
@@ -420,9 +415,8 @@ Create a new plugin, `wicket-wp-financial-fields`, using `wicket-wp-guest-checko
 
 - ✅ Export column names and field formatting: Implemented (CSV export with GL Code, Term Start Date, Term End Date)
 - ✅ Subscription renewals: Logic implemented using `Membership_Config::get_membership_dates()` with existing membership array
-- ⏳ HyperFields integration approach for settings UI
-- ⏳ Wicket Base Plugin settings tab integration details
-- ⏳ Specific hooks for membership creation/update events
+- ✅ WPSettings integration for settings UI
+- ✅ Specific hooks for membership creation/update events
 
 ## Legacy Implementation Notes (Base Plugin Feature Branch)
 
@@ -437,7 +431,7 @@ Reference files copied to `wicket-wp-financial-fields/reference-only-legacy/`:
 
 Key behaviors in that branch:
 - Finance settings tab exists with:
-  - Feature toggle `wicket_finance_enable_system`.
+  - Feature toggle `wicket_finance_enable_system` (default on).
   - Customer visibility category multiselect from `product_cat` (IDs).
   - Surface checkboxes for order confirmation, emails, My Account, subscriptions, PDF invoices.
   - Dynamic deferral trigger checkboxes; Processing is always enabled/forced.
@@ -523,16 +517,11 @@ Key behaviors in that branch:
 ### What's Pending
 
 **High Priority:**
-1. Settings UI integration with Wicket Base Plugin (currently standalone WordPress settings page)
-2. HyperFields implementation for settings forms
-3. Membership creation/update hooks (overwrites with authoritative dates)
-4. Email-specific rendering verification (8 email types)
-5. Unit test suite (Pest framework installed, tests not written)
+1. Email-specific rendering verification (8 email types)
+2. Unit test suite (Pest framework installed, tests not written)
 
 **Medium Priority:**
-1. PDF invoice display (`woocommerce-pdf-invoices-packing-slips` integration)
-2. Subscriptions surface display (WooCommerce Subscriptions integration)
-3. Browser/integration tests
+1. Browser/integration tests
 
 **Low Priority:**
 1. Enhanced PHPDoc blocks
@@ -541,7 +530,7 @@ Key behaviors in that branch:
 
 ### Technical Debt
 
-- Settings UI uses basic WordPress Settings API instead of HyperFields
+- Settings UI relies on Wicket Base Plugin WPSettings (dependency coupling)
 - No cache layer for eligibility checks
 - Email rendering not differentiated by email type (uses single hook)
 - Membership gateway assumes specific meta keys (fragile coupling)
@@ -554,7 +543,8 @@ wicket-wp-financial-fields/
 │   ├── Plugin.php
 │   ├── Settings/
 │   │   ├── FinanceSettings.php
-│   │   └── HyperFieldsSettings.php
+│   │   └── WPSettingsSettings.php
+│   ├── helpers.php
 │   ├── Product/
 │   │   └── FinanceMeta.php
 │   ├── Order/
@@ -585,13 +575,9 @@ wicket-wp-financial-fields/
    - Test all 8 email types
 
 2. **Settings Refinement**
-   - Integrate with Wicket Base Plugin settings structure
-   - Implement HyperFields for forms
    - Add settings validation
 
 3. **Complete Surface Implementations**
-   - PDF invoice rendering
-   - Subscriptions display
    - Email type differentiation
 
 4. **Testing**

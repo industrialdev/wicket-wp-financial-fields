@@ -32,6 +32,7 @@ define('WICKET_FINANCE_BASENAME', plugin_basename(__FILE__));
 
 // Load Composer autoloader
 require_once WICKET_FINANCE_PATH . 'vendor/autoload.php';
+require_once WICKET_FINANCE_PATH . 'src/helpers.php';
 
 /**
  * Check if WooCommerce is active.
@@ -181,6 +182,16 @@ function wicket_finance_activate(): void
     // Set activation timestamp
     if (!get_option('wicket_finance_activated_time')) {
         update_option('wicket_finance_activated_time', time());
+    }
+
+    $wicket_settings = get_option('wicket_settings', []);
+    if (!is_array($wicket_settings)) {
+        $wicket_settings = [];
+    }
+
+    if (!array_key_exists('wicket_finance_enable_system', $wicket_settings)) {
+        $wicket_settings['wicket_finance_enable_system'] = '1';
+        update_option('wicket_settings', $wicket_settings);
     }
 }
 

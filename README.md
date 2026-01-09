@@ -26,7 +26,7 @@ This plugin extends WooCommerce with financial fields for revenue deferral track
 
 1. Upload the plugin files to `/wp-content/plugins/wicket-wp-financial-fields/`
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Navigate to Wicket Settings > Finance to configure
+3. Navigate to Wicket > Finance to configure
 
 ## Features
 
@@ -65,7 +65,7 @@ Configurable visibility on:
 - Emails (8 types supported)
 - My Account › Orders
 - Subscriptions (if WooCommerce Subscriptions active)
-- PDF invoices (via woocommerce-pdf-invoices-packing-slips)
+- PDF invoices (via supported invoice plugins)
 
 **Display Requirements** (all must be true):
 - Product in eligible category (configured in settings)
@@ -83,9 +83,11 @@ Finance fields available in WooCommerce CSV exports:
 
 ## Configuration
 
-### Settings (Wicket Settings › Finance)
+### Settings (Wicket › Finance)
 
 **Revenue Deferral Dates**
+
+- Finance system is enabled by default on activation
 
 *Customer Visibility:*
 - Select product categories eligible for date display
@@ -94,6 +96,10 @@ Finance fields available in WooCommerce CSV exports:
 *Dynamic Deferral Dates Trigger:*
 - Order statuses that trigger automatic date population
 - Processing is always enabled
+
+### Status Notes
+
+- Email rendering uses a single hook and should be verified across all 8 email types
 
 ### Product Configuration
 
@@ -128,10 +134,19 @@ All changes create audit notes with user and timestamp.
 - `_wicket_finance_end_date`
 - `_wicket_finance_gl_code`
 
-**Settings:**
-- `wicket_finance_eligible_categories`
-- `wicket_finance_visibility_surfaces`
-- `wicket_finance_dynamic_date_triggers`
+**Settings (stored in `wicket_settings`):**
+- `wicket_finance_enable_system` (default on)
+- `wicket_finance_customer_visible_categories`
+- `wicket_finance_display_order_confirmation`
+- `wicket_finance_display_emails`
+- `wicket_finance_display_my_account`
+- `wicket_finance_display_subscriptions`
+- `wicket_finance_display_pdf_invoices`
+- `wicket_finance_trigger_draft`
+- `wicket_finance_trigger_pending`
+- `wicket_finance_trigger_on_hold`
+- `wicket_finance_trigger_processing`
+- `wicket_finance_trigger_completed`
 
 ### Date Format
 
@@ -165,7 +180,8 @@ wicket-wp-financial-fields/
 │   ├── Plugin.php                    # Bootstrap
 │   ├── Settings/
 │   │   ├── FinanceSettings.php       # Settings facade
-│   │   └── SettingsIntegration.php   # Admin UI
+│   │   └── WPSettingsSettings.php    # Admin UI
+│   ├── helpers.php                   # Finance option helpers
 │   ├── Product/
 │   │   └── FinanceMeta.php           # Product fields
 │   ├── Order/

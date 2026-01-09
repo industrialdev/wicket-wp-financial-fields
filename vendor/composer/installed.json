@@ -1887,116 +1887,6 @@
             "install-path": "../doctrine/deprecations"
         },
         {
-            "name": "estebanforge/hyperfields",
-            "version": "1.0.3",
-            "version_normalized": "1.0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/EstebanForge/HyperFields.git",
-                "reference": "8f842bb027b1c7553c8b75f41f08bb2347bde1ee"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/EstebanForge/HyperFields/zipball/8f842bb027b1c7553c8b75f41f08bb2347bde1ee",
-                "reference": "8f842bb027b1c7553c8b75f41f08bb2347bde1ee",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "brain/monkey": "^2.6",
-                "mockery/mockery": "^1.6",
-                "phpunit/phpunit": "^11.0"
-            },
-            "time": "2026-01-08T20:26:07+00:00",
-            "type": "wordpress-plugin",
-            "installation-source": "dist",
-            "autoload": {
-                "files": [
-                    "includes/helpers.php",
-                    "includes/backward-compatibility.php",
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "HyperFields\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Esteban Cuevas",
-                    "email": "esteban@actitud.xyz"
-                }
-            ],
-            "description": "HyperFields: A powerful custom field system for WordPress, providing metaboxes, options pages, and conditional logic.",
-            "support": {
-                "issues": "https://github.com/EstebanForge/HyperFields/issues",
-                "source": "https://github.com/EstebanForge/HyperFields/tree/1.0.3"
-            },
-            "install-path": "../estebanforge/hyperfields"
-        },
-        {
-            "name": "estebanforge/hyperpress",
-            "version": "3.0.4",
-            "version_normalized": "3.0.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/EstebanForge/HyperPress.git",
-                "reference": "f366892dcd1fb502b068559b5121086600e99a22"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/EstebanForge/HyperPress/zipball/f366892dcd1fb502b068559b5121086600e99a22",
-                "reference": "f366892dcd1fb502b068559b5121086600e99a22",
-                "shasum": ""
-            },
-            "require": {
-                "estebanforge/hyperfields": "^1",
-                "php": ">=8.1",
-                "starfederation/datastar-php": "^1.0"
-            },
-            "require-dev": {
-                "brain/monkey": "^2",
-                "pestphp/pest": "^4",
-                "pestphp/pest-plugin-browser": "^4",
-                "phpunit/phpunit": "^12"
-            },
-            "time": "2026-01-08T20:28:28+00:00",
-            "type": "wordpress-plugin",
-            "installation-source": "dist",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "HyperPress\\": "src/"
-                },
-                "exclude-from-classmap": [
-                    "**/vendor/starfederation/datastar-php/**"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Esteban Cuevas",
-                    "email": "esteban@actitud.xyz"
-                }
-            ],
-            "description": "Supercharge WordPress with the power of hypermedia. Use HTMX, Alpine Ajax, and Datastar to create rich, interactive blocks and pages—all with the simplicity of PHP.",
-            "support": {
-                "issues": "https://github.com/EstebanForge/HyperPress/issues",
-                "source": "https://github.com/EstebanForge/HyperPress/tree/3.0.4"
-            },
-            "install-path": "../estebanforge/hyperpress"
-        },
-        {
             "name": "evenement/evenement",
             "version": "v3.0.2",
             "version_normalized": "3.0.2.0",
@@ -2186,17 +2076,17 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.92.4",
-            "version_normalized": "3.92.4.0",
+            "version": "v3.92.5",
+            "version_normalized": "3.92.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "9e7488b19403423e02e8403cc1eb596baf4673b0"
+                "reference": "260cc8c4a1d2f6d2f22cd4f9c70aa72e55ebac58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/9e7488b19403423e02e8403cc1eb596baf4673b0",
-                "reference": "9e7488b19403423e02e8403cc1eb596baf4673b0",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/260cc8c4a1d2f6d2f22cd4f9c70aa72e55ebac58",
+                "reference": "260cc8c4a1d2f6d2f22cd4f9c70aa72e55ebac58",
                 "shasum": ""
             },
             "require": {
@@ -2244,7 +2134,7 @@
                 "ext-dom": "For handling output formats in XML",
                 "ext-mbstring": "For handling non-UTF8 characters."
             },
-            "time": "2026-01-04T00:38:52+00:00",
+            "time": "2026-01-08T21:57:37+00:00",
             "bin": [
                 "php-cs-fixer"
             ],
@@ -2281,7 +2171,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.92.4"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.92.5"
             },
             "funding": [
                 {
@@ -6393,56 +6283,6 @@
                 }
             ],
             "install-path": "../staabm/side-effects-detector"
-        },
-        {
-            "name": "starfederation/datastar-php",
-            "version": "1.0.0-RC.5",
-            "version_normalized": "1.0.0.0-RC5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/starfederation/datastar-php.git",
-                "reference": "3120e35d6a38c7ea99fbbd281d27e9b8e663e208"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/starfederation/datastar-php/zipball/3120e35d6a38c7ea99fbbd281d27e9b8e663e208",
-                "reference": "3120e35d6a38c7ea99fbbd281d27e9b8e663e208",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "craftcms/ecs": "dev-main",
-                "craftcms/phpstan": "dev-main",
-                "pestphp/pest": "^3.5"
-            },
-            "time": "2025-12-17T14:44:50+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "starfederation\\datastar\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "mit"
-            ],
-            "authors": [
-                {
-                    "name": "Ben Croker",
-                    "homepage": "https://putyourlightson.com/",
-                    "role": "Author"
-                }
-            ],
-            "description": "A PHP SDK for working with Datastar.",
-            "support": {
-                "docs": "https://github.com/starfederation/datastar-php",
-                "issues": "https://github.com/starfederation/datastar-php/issues",
-                "source": "https://github.com/starfederation/datastar-php"
-            },
-            "install-path": "../starfederation/datastar-php"
         },
         {
             "name": "symfony/console",

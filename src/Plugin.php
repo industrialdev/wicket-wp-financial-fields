@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Wicket\Finance;
 
 use Wicket\Finance\Settings\FinanceSettings;
-use Wicket\Finance\Settings\HyperFieldsSettings;
+use Wicket\Finance\Settings\WPSettingsSettings;
 use Wicket\Finance\Product\FinanceMeta;
 use Wicket\Finance\Order\LineItemMeta;
 use Wicket\Finance\Order\DynamicDates;
@@ -68,11 +68,11 @@ class Plugin
     private $settings;
 
     /**
-     * HyperFields settings service (standalone settings page).
+     * WPSettings settings service (Wicket Settings page).
      *
-     * @var HyperFieldsSettings|null
+     * @var WPSettingsSettings|null
      */
-    private $hyperfields_settings;
+    private $wpsettings_settings;
 
     /**
      * Product meta service.
@@ -155,9 +155,9 @@ class Plugin
         $date_formatter = new DateFormatter();
         $membership_gateway = new MembershipGateway($this->logger);
 
-        // Initialize HyperFields settings page (standalone settings page)
-        $this->hyperfields_settings = new HyperFieldsSettings($this->settings, $this->logger);
-        $this->hyperfields_settings->init();
+        // Initialize WPSettings settings page (Wicket Settings page)
+        $this->wpsettings_settings = new WPSettingsSettings($this->settings, $this->logger);
+        $this->wpsettings_settings->init();
 
         // Initialize product meta (Finance Mapping tab)
         $this->product_meta = new FinanceMeta($date_formatter, $this->logger);

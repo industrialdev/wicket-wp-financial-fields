@@ -1392,7 +1392,7 @@ return array(
     'Wicket\\Finance\\Plugin' => $baseDir . '/src/Plugin.php',
     'Wicket\\Finance\\Product\\FinanceMeta' => $baseDir . '/src/Product/FinanceMeta.php',
     'Wicket\\Finance\\Settings\\FinanceSettings' => $baseDir . '/src/Settings/FinanceSettings.php',
-    'Wicket\\Finance\\Settings\\HyperFieldsSettings' => $baseDir . '/src/Settings/HyperFieldsSettings.php',
+    'Wicket\\Finance\\Settings\\WPSettingsSettings' => $baseDir . '/src/Settings/WPSettingsSettings.php',
     'Wicket\\Finance\\Support\\DateFormatter' => $baseDir . '/src/Support/DateFormatter.php',
     'Wicket\\Finance\\Support\\Eligibility' => $baseDir . '/src/Support/Eligibility.php',
     'Wicket\\Finance\\Support\\Logger' => $baseDir . '/src/Support/Logger.php',

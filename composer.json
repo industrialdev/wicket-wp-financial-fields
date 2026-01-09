@@ -21,8 +21,7 @@
         }
     ],
     "require": {
-        "php": ">=8.3",
-        "estebanforge/hyperpress": "^3"
+        "php": ">=8.3"
     },
     "require-dev": {
         "brain/monkey": "^2",

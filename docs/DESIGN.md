@@ -6,7 +6,7 @@ The Wicket Financial Fields plugin follows a **domain-driven design** pattern wi
 
 1. **Domain Layer**: Core business logic (Product, Order, Display)
 2. **Infrastructure Layer**: Cross-cutting concerns (Logger, DateFormatter, Eligibility)
-3. **Integration Layer**: External system adapters (Export, MembershipGateway, HyperFields)
+3. **Integration Layer**: External system adapters (Export, MembershipGateway, WPSettings)
 4. **Presentation Layer**: Settings UI and customer-facing rendering
 
 ### High-Level Architecture
@@ -22,7 +22,7 @@ The Wicket Financial Fields plugin follows a **domain-driven design** pattern wi
          │
          ├──> Settings Layer
          │    ├── FinanceSettings (Typed Facade)
-         │    └── HyperFieldsSettings (UI)
+         │    └── WPSettingsSettings (UI)
          │
          ├──> Support Services
          │    ├── Logger (Audit trail)
@@ -143,29 +143,22 @@ Stored in `wp_woocommerce_order_itemmeta`:
 
 ### WordPress Options
 
-Stored in `wp_options` via HyperFields:
+Stored in `wp_options` under `wicket_settings` via WPSettings (Wicket Base Plugin):
 
 | Key | Type | Purpose |
 |-----|------|---------|
-| `wicket_finance_settings` (array) | mixed | All settings in one option |
-
-**Nested Structure**:
-```php
-[
-    'wicket_finance_enable_system' => bool,
-    'wicket_finance_customer_visible_categories' => int[],
-    'wicket_finance_display_order_confirmation' => bool,
-    'wicket_finance_display_emails' => bool,
-    'wicket_finance_display_my_account' => bool,
-    'wicket_finance_display_subscriptions' => bool,
-    'wicket_finance_display_pdf_invoices' => bool,
-    'wicket_finance_trigger_draft' => bool,
-    'wicket_finance_trigger_pending' => bool,
-    'wicket_finance_trigger_on_hold' => bool,
-    'wicket_finance_trigger_processing' => bool, // Always true
-    'wicket_finance_trigger_completed' => bool,
-]
-```
+| `wicket_finance_enable_system` | bool | Master feature toggle (default on) |
+| `wicket_finance_customer_visible_categories` | int[] | Eligible product category IDs |
+| `wicket_finance_display_order_confirmation` | bool | Show on order confirmation |
+| `wicket_finance_display_emails` | bool | Show in email notifications |
+| `wicket_finance_display_my_account` | bool | Show in My Account orders |
+| `wicket_finance_display_subscriptions` | bool | Show in subscriptions details |
+| `wicket_finance_display_pdf_invoices` | bool | Show in PDF invoices |
+| `wicket_finance_trigger_draft` | bool | Trigger on draft |
+| `wicket_finance_trigger_pending` | bool | Trigger on pending payment |
+| `wicket_finance_trigger_on_hold` | bool | Trigger on on-hold |
+| `wicket_finance_trigger_processing` | bool | Trigger on processing (forced on) |
+| `wicket_finance_trigger_completed` | bool | Trigger on completed |
 
 ## Service Layer Architecture
 
@@ -206,18 +199,19 @@ FinanceSettings::is_surface_enabled(string $surface): bool
 FinanceSettings::get_trigger_statuses(): array
 ```
 
-#### HyperFieldsSettings (UI)
+#### WPSettingsSettings (UI)
 
 **Responsibilities**:
 - Settings page registration
 - Form field definition
 - Settings persistence
 
-**Dependencies**: FinanceSettings, Logger, HyperFields API
+**Dependencies**: FinanceSettings, Logger, WPSettings
 
 **Registration**:
 ```php
-add_action('admin_menu', [$this, 'register_settings_page'], 99);
+add_action('init', [$this, 'register_finance_settings_page']);
+add_action('admin_menu', [$this, 'register_finance_submenu'], 999);
 ```
 
 ### Domain Services
@@ -292,8 +286,8 @@ Admin Edit → Validate → Update Meta + Audit Note
 **Hooks**:
 ```php
 woocommerce_order_status_changed
-wicket_memberships_created
-wicket_memberships_updated
+woocommerce_new_order
+wicket_member_create_record
 ```
 
 **Trigger Logic**:
@@ -328,12 +322,13 @@ if (in_array($new_status, $enabled_statuses)) {
 
 **Hooks**:
 ```php
-woocommerce_order_details_after_order_table_items
-woocommerce_email_order_details
-woocommerce_my_account_my_orders_details
-wcs_subscriptions_details_table
-wpo_wcpdf_after_order_details
+woocommerce_order_item_meta_end
+wpo_wcpdf_after_item_meta
 ```
+
+**Context detection**:
+- Email surface via `did_action('woocommerce_email_order_details')`
+- Subscription surface via `wcs_is_subscription` + account view
 
 **Eligibility Matrix**:
 ```
@@ -628,22 +623,15 @@ add_action('woocommerce_before_order_itemmeta', [$this, 'render_line_item_fields
 
 **Dynamic Dates**:
 ```php
-add_action('woocommerce_order_status_changed', [$this, 'on_order_status_changed'], 10, 4);
-add_action('wicket_memberships_created', [$this, 'on_membership_created'], 10, 2);
-add_action('wicket_memberships_updated', [$this, 'on_membership_updated'], 10, 2);
+add_action('woocommerce_order_status_changed', [$this, 'on_order_status_changed'], 10, 3);
+add_action('woocommerce_new_order', [$this, 'on_order_created'], 10, 2);
+add_action('wicket_member_create_record', [$this, 'on_membership_created'], 10, 3);
 ```
 
 **Customer Display**:
 ```php
-add_action('woocommerce_order_details_after_order_table_items', [$this, 'render_order_confirmation']);
-add_action('woocommerce_email_order_details', [$this, 'render_email'], 10, 4);
-add_action('woocommerce_my_account_my_orders_details', [$this, 'render_my_account'], 10, 4);
-
-// Subscriptions (if active)
-add_action('wcs_subscriptions_details_table', [$this, 'render_subscription'], 10, 2);
-
-// PDF Invoices (if active)
-add_action('wpo_wcpdf_after_order_details', [$this, 'render_pdf_invoice'], 10, 2);
+add_action('woocommerce_order_item_meta_end', [$this, 'render_on_order_items'], 10, 3);
+add_action('wpo_wcpdf_after_item_meta', [$this, 'render_on_pdf_invoice'], 10, 3);
 ```
 
 **Export**:
@@ -680,7 +668,7 @@ apply_filters('wicket/finance/export_data', $export_data, $item, $product);
 3. DateFormatter                   // No deps
 4. MembershipGateway (Factory)     // No deps
 5. Eligibility                     // Dep: FinanceSettings
-6. HyperFieldsSettings             // Dep: FinanceSettings, Logger
+6. WPSettingsSettings              // Dep: FinanceSettings, Logger
 7. Product\FinanceMeta             // Dep: Logger, Eligibility
 8. Order\LineItemMeta              // Dep: Logger, DateFormatter, Eligibility
 9. Order\DynamicDates              // Dep: Logger, MembershipGateway, Eligibility
@@ -795,7 +783,7 @@ If breaking changes needed:
 
 - **WooCommerce**: Core commerce platform
 - **Wicket Memberships**: Membership management
-- **HyperPress/HyperFields**: Settings UI framework
+- **WPSettings (Wicket Base Plugin)**: Settings UI framework
 - **WordPress 6.0+**: Core CMS
 
 ### Related Plugins

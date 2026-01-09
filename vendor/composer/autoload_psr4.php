@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'starfederation\\datastar\\' => array($vendorDir . '/starfederation/datastar-php/src'),
     'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-common/src'),
     'Wicket\\Finance\\Tests\\' => array($baseDir . '/tests/unit'),
     'Wicket\\Finance\\' => array($baseDir . '/src'),
@@ -61,8 +60,6 @@ return array(
     'League\\Uri\\' => array($vendorDir . '/league/uri-components', $vendorDir . '/league/uri', $vendorDir . '/league/uri-interfaces'),
     'Kelunik\\Certificate\\' => array($vendorDir . '/kelunik/certificate/src'),
     'Jean85\\' => array($vendorDir . '/jean85/pretty-package-versions/src'),
-    'HyperPress\\' => array($vendorDir . '/estebanforge/hyperpress/src'),
-    'HyperFields\\' => array($vendorDir . '/estebanforge/hyperfields/src'),
     'Fidry\\CpuCoreCounter\\' => array($vendorDir . '/fidry/cpu-core-counter/src'),
     'Evenement\\' => array($vendorDir . '/evenement/evenement/src'),
     'Doctrine\\Deprecations\\' => array($vendorDir . '/doctrine/deprecations/src'),
