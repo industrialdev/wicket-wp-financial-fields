@@ -3,7 +3,7 @@
  * Plugin Name: Wicket Financial Fields
  * Plugin URI: https://github.com/wicket/wicket-wp-financial-fields
  * Description: Finance mapping and deferred revenue system for WooCommerce orders. Provides GL code mapping, revenue deferral dates, and dynamic membership term date population.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Wicket Inc.
  * Author URI: https://wicket.io
  * Requires at least: 6.0
