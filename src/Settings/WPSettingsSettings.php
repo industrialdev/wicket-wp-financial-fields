@@ -7,9 +7,9 @@ namespace Wicket\Finance\Settings;
 use Wicket\Finance\Support\Logger;
 
 /**
- * WPSettings-based Finance settings page.
+ * WPSettings-based Finance settings integration.
  *
- * Registers Finance settings under the Wicket Settings UI.
+ * Registers Finance tab in Wicket Settings using priority-based tab system.
  *
  * @since 1.0.0
  */
@@ -30,11 +30,11 @@ class WPSettingsSettings
     private $logger;
 
     /**
-     * Finance settings page instance.
+     * Track if Finance tab was registered via new priority system.
      *
-     * @var \Jeffreyvr\WPSettings\WPSettings|null
+     * @var bool
      */
-    private $finance_settings_page;
+    private $tab_registered = false;
 
     /**
      * Constructor.
@@ -49,167 +49,60 @@ class WPSettingsSettings
     }
 
     /**
-     * Initialize WPSettings settings page.
+     * Initialize Finance tab registration.
+     *
+     * Hooks into new priority-based system with fallback for older base plugin versions.
      *
      * @return void
      */
     public function init(): void
     {
-        add_action('init', [$this, 'register_finance_settings_page']);
-        add_action('admin_menu', [$this, 'register_finance_submenu'], 999);
-        add_action('admin_menu', [$this, 'reorder_submenu'], 999);
+        // New priority-based tab system (base plugin 1.1.0+)
+        add_filter('wicket_settings_tabs', [$this, 'register_finance_tab']);
+
+        // Fallback for older base plugin versions without priority system
+        add_filter('wicket_settings_extend', [$this, 'register_finance_tab_fallback']);
     }
 
     /**
-     * Ensure Finance appears after Wicket Settings in the submenu.
+     * Register Finance tab via priority-based tabs filter.
      *
-     * @return void
+     * Priority 45 places Finance between Touchpoints (40) and Integrations (50).
+     *
+     * @param array $tabs Existing tabs configuration.
+     * @return array Modified tabs configuration.
      */
-    public function reorder_submenu(): void
+    public function register_finance_tab(array $tabs): array
     {
-        global $submenu;
+        $this->tab_registered = true;
 
-        if (empty($submenu) || !is_array($submenu)) {
-            return;
-        }
+        $tabs[45] = [
+            'key' => 'finance',
+            'label' => __('Finance', 'wicket'),
+            'callback' => [$this, 'register_finance_tab_sections'],
+        ];
 
-        $parent_slug = $this->get_wicket_parent_slug();
-
-        if (!isset($submenu[$parent_slug]) || !is_array($submenu[$parent_slug])) {
-            return;
-        }
-
-        $items = $submenu[$parent_slug];
-        $finance_index = null;
-        $settings_index = null;
-
-        foreach ($items as $index => $item) {
-            if (!isset($item[2])) {
-                continue;
-            }
-
-            if ($item[2] === 'wicket-settings-financial') {
-                $finance_index = $index;
-            } elseif ($item[2] === 'wicket-settings') {
-                $settings_index = $index;
-            }
-        }
-
-        if ($finance_index === null || $settings_index === null) {
-            return;
-        }
-
-        if ($finance_index === $settings_index + 1) {
-            return;
-        }
-
-        $finance_item = $items[$finance_index];
-        unset($items[$finance_index]);
-        $items = array_values($items);
-
-        $insert_at = $settings_index + 1;
-        array_splice($items, $insert_at, 0, [$finance_item]);
-
-        $submenu[$parent_slug] = $items;
+        return $tabs;
     }
 
     /**
-     * Register Finance submenu under Wicket Settings.
+     * Fallback registration for older base plugin versions.
      *
-     * @return void
-     */
-    public function register_finance_submenu(): void
-    {
-        if (!$this->finance_settings_page || !function_exists('add_submenu_page')) {
-            return;
-        }
-
-        add_submenu_page(
-            'wicket-settings',
-            __('Finance', 'wicket'),
-            __('Finance', 'wicket'),
-            'manage_options',
-            'wicket-settings-financial',
-            [$this, 'render_finance_settings_page']
-        );
-    }
-
-    /**
-     * Render the Finance settings page.
+     * Only executes if the new priority-based filter was not triggered.
      *
-     * @return void
+     * @param \Jeffreyvr\WPSettings\WPSettings $settings WPSettings instance.
+     * @return \Jeffreyvr\WPSettings\WPSettings Modified settings instance.
      */
-    public function render_finance_settings_page(): void
+    public function register_finance_tab_fallback($settings)
     {
-        if (!$this->finance_settings_page) {
-            return;
+        if ($this->tab_registered) {
+            return $settings;
         }
 
-        $this->finance_settings_page->render();
-    }
-
-    /**
-     * Resolve the Wicket parent menu slug.
-     *
-     * @return string
-     */
-    private function get_wicket_parent_slug(): string
-    {
-        $menu = $GLOBALS['menu'] ?? [];
-
-        foreach ($menu as $item) {
-            if (!isset($item[2])) {
-                continue;
-            }
-
-            if ($item[2] === 'wicket') {
-                return 'wicket';
-            }
-        }
-
-        foreach ($menu as $item) {
-            if (!isset($item[2])) {
-                continue;
-            }
-
-            if ($item[2] === 'wicket-settings') {
-                return 'wicket-settings';
-            }
-        }
-
-        return 'wicket-settings';
-    }
-
-    /**
-     * Register the Finance settings page using WPSettings.
-     *
-     * @return void
-     */
-    public function register_finance_settings_page(): void
-    {
-        if (!class_exists(\Jeffreyvr\WPSettings\WPSettings::class)) {
-            return;
-        }
-
-        if ($this->finance_settings_page) {
-            return;
-        }
-
-        $settings = new \Jeffreyvr\WPSettings\WPSettings(__('Finance Settings', 'wicket'), 'wicket-settings-financial');
-        $settings->set_menu_title(__('Finance', 'wicket'));
-        $settings->set_capability('manage_options');
-        $settings->set_option_name('wicket_settings');
-
-        $finance_tab = $settings->add_tab(__('Finance', 'wicket'), 'finance');
+        $finance_tab = $settings->add_tab(__('Finance', 'wicket'));
         $this->register_finance_tab_sections($finance_tab);
 
-        $settings->errors = new \Jeffreyvr\WPSettings\Error($settings);
-        $settings->flash = new \Jeffreyvr\WPSettings\Flash($settings);
-
-        add_action('admin_init', [$settings, 'save'], 20);
-        add_action('admin_head', [$settings, 'styling'], 20);
-
-        $this->finance_settings_page = $settings;
+        return $settings;
     }
 
     /**
@@ -218,7 +111,7 @@ class WPSettingsSettings
      * @param mixed $finance_tab WPSettings tab instance.
      * @return void
      */
-    private function register_finance_tab_sections($finance_tab): void
+    public function register_finance_tab_sections($finance_tab): void
     {
         if (!$finance_tab) {
             return;
