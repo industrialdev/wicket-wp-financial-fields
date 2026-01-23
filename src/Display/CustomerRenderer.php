@@ -126,16 +126,21 @@ class CustomerRenderer
     /**
      * Renders dates on PDF invoices.
      *
-     * @param string           $document_type Document type.
-     * @param \WC_Order        $order         Order object.
-     * @param \WC_Order_Item   $item          Order item.
+     * @param string               $document_type Document type.
+     * @param array|\WC_Order_Item $item          Order item data from PDF hook.
+     * @param \WC_Order            $order         Order object.
      * @return void
      */
-    public function render_on_pdf_invoice(string $document_type, \WC_Order $order, \WC_Order_Item $item): void
+    public function render_on_pdf_invoice(string $document_type, $item, \WC_Order $order): void
     {
         // Only render on invoice documents
         if ($document_type !== 'invoice') {
             return;
+        }
+
+        // wpo_wcpdf_after_item_meta passes an item data array, convert if possible
+        if (is_array($item) && isset($item['item_id'])) {
+            $item = $order->get_item((int) $item['item_id']);
         }
 
         if (!($item instanceof \WC_Order_Item_Product)) {
