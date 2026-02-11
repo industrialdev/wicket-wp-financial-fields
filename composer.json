@@ -1,77 +1,78 @@
 {
-    "name": "industrialdev/wicket-wp-financial-fields",
-    "description": "Wicket Financial Fields - Finance mapping and deferred revenue system for WooCommerce",
-    "version": "1.0.2",
-    "type": "wordpress-plugin",
-    "keywords": [
-        "wordpress",
-        "woocommerce",
-        "finance",
-        "gl-code",
-        "revenue-deferral",
-        "memberships"
-    ],
-    "homepage": "https://github.com/industrialdev/wicket-wp-financial-fields",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Wicket Inc.",
-            "email": "info@wicket.io",
-            "homepage": "https://wicket.io"
-        }
-    ],
-    "require": {
-        "php": ">=8.3"
-    },
-    "require-dev": {
-        "brain/monkey": "^2",
-        "friendsofphp/php-cs-fixer": "^3",
-        "pestphp/pest": "^4",
-        "pestphp/pest-plugin-browser": "^4",
-        "phpunit/phpunit": "^12"
-    },
-    "autoload": {
-        "psr-4": {
-            "Wicket\\Finance\\": "src/"
-        },
-        "classmap": [
-            "src/"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/",
-            "Wicket\\Finance\\Tests\\": "tests/unit/"
-        }
-    },
-    "scripts": {
-        "production": "rm -rf vendor && composer install --no-dev --optimize-autoloader",
-        "setup-hooks": "mkdir -p .git/hooks && cp .ci/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push && echo 'Git hooks installed to .git/hooks/pre-push'",
-        "test": "pest",
-        "test:unit": "pest --testsuite unit",
-        "test:coverage": "pest --coverage-html coverage",
-        "test:browser": "WICKET_BROWSER_BASE_URL=https://localhost ./vendor/bin/pest --testsuite browser",
-        "lint": "php-cs-fixer fix --dry-run --diff",
-        "format": "php-cs-fixer fix",
-        "check": [
-            "@lint",
-            "@test"
-        ],
-        "cs:fix": "php-cs-fixer fix"
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    },
-    "minimum-stability": "RC",
-    "prefer-stable": true,
-    "scripts-descriptions": {
-        "test": "Run Pest tests",
-        "test:coverage": "Run Pest tests with HTML coverage report",
-        "test:browser": "Run Pest browser tests against https://localhost",
-        "lint": "Run PHP CS Fixer to check coding standards",
-        "format": "Run PHP CS Fixer to fix coding standards issues"
+  "authors": [
+    {
+      "email": "info@wicket.io",
+      "homepage": "https://wicket.io",
+      "name": "Wicket Inc."
     }
+  ],
+  "autoload": {
+    "classmap": [
+      "src/"
+    ],
+    "psr-4": {
+      "Wicket\\Finance\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/",
+      "Wicket\\Finance\\Tests\\": "tests/unit/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    },
+    "platform-check": false,
+    "sort-packages": true
+  },
+  "description": "Wicket Financial Fields - Finance mapping and deferred revenue system for WooCommerce",
+  "homepage": "https://github.com/industrialdev/wicket-wp-financial-fields",
+  "keywords": [
+    "wordpress",
+    "woocommerce",
+    "finance",
+    "gl-code",
+    "revenue-deferral",
+    "memberships"
+  ],
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "RC",
+  "name": "industrialdev/wicket-wp-financial-fields",
+  "prefer-stable": true,
+  "require": {
+    "php": "\u003e=8.3"
+  },
+  "require-dev": {
+    "brain/monkey": "^2",
+    "friendsofphp/php-cs-fixer": "^3",
+    "pestphp/pest": "^4",
+    "pestphp/pest-plugin-browser": "^4",
+    "phpunit/phpunit": "^12"
+  },
+  "scripts": {
+    "check": [
+      "@lint",
+      "@test"
+    ],
+    "cs:fix": "php-cs-fixer fix",
+    "format": "php-cs-fixer fix",
+    "lint": "php-cs-fixer fix --dry-run --diff",
+    "production": "rm -rf vendor \u0026\u0026 composer install --no-dev --optimize-autoloader",
+    "setup-hooks": "mkdir -p .git/hooks \u0026\u0026 cp .ci/pre-push .git/hooks/pre-push \u0026\u0026 chmod +x .git/hooks/pre-push \u0026\u0026 echo 'Git hooks installed to .git/hooks/pre-push'",
+    "test": "pest",
+    "test:browser": "WICKET_BROWSER_BASE_URL=https://localhost ./vendor/bin/pest --testsuite browser",
+    "test:coverage": "pest --coverage-html coverage",
+    "test:unit": "pest --testsuite unit"
+  },
+  "scripts-descriptions": {
+    "format": "Run PHP CS Fixer to fix coding standards issues",
+    "lint": "Run PHP CS Fixer to check coding standards",
+    "test": "Run Pest tests",
+    "test:browser": "Run Pest browser tests against https://localhost",
+    "test:coverage": "Run Pest tests with HTML coverage report"
+  },
+  "type": "wordpress-plugin",
+  "version": "1.0.3"
 }
