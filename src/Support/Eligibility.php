@@ -19,13 +19,6 @@ use Wicket\Finance\Settings\FinanceSettings;
 class Eligibility
 {
     /**
-     * Default membership category slug.
-     *
-     * Can be extended via wicket/finance/membership_categories filter.
-     */
-    private const DEFAULT_MEMBERSHIP_CATEGORY = 'membership';
-
-    /**
      * Settings facade.
      *
      * @var FinanceSettings
@@ -40,11 +33,11 @@ class Eligibility
     private $logger;
 
     /**
-     * Cached membership categories.
+    * Cached membership category IDs.
      *
      * @var array|null
      */
-    private $membership_categories = null;
+    private $membership_category_ids = null;
 
     /**
      * Constructor.
@@ -184,8 +177,8 @@ class Eligibility
             return false;
         }
 
-        // Get membership category slugs
-        $membership_categories = $this->get_membership_categories();
+        // Get membership category IDs
+        $membership_category_ids = $this->get_membership_category_ids();
 
         // Get product categories
         $category_ids = $check_product->get_category_ids();
@@ -194,45 +187,34 @@ class Eligibility
             return false;
         }
 
-        // Check if any product category slug matches membership categories
-        foreach ($category_ids as $cat_id) {
-            $term = get_term($cat_id, 'product_cat');
-            if ($term && !is_wp_error($term) && in_array($term->slug, $membership_categories, true)) {
-                return true;
-            }
-        }
+        // Check if any product category ID matches membership categories
+        $intersection = array_intersect($membership_category_ids, $category_ids);
 
-        return false;
+        return !empty($intersection);
     }
 
     /**
-     * Gets membership category slugs.
+     * Gets membership category IDs from the membership plugin options.
      *
-     * Returns an array of category slugs that should trigger dynamic date writes.
-     * Filterable via wicket/finance/membership_categories.
+     * Reads wicket_membership_plugin_options[wicket_show_mship_order_org_search][categorychoice][]
+     * and caches the result for reuse.
      *
-     * @return array Array of category slugs.
+     * @return array Array of category IDs.
      */
-    public function get_membership_categories(): array
+    public function get_membership_category_ids(): array
     {
-        if ($this->membership_categories !== null) {
-            return $this->membership_categories;
+        if ($this->membership_category_ids !== null) {
+            return $this->membership_category_ids;
         }
 
-        $categories = [self::DEFAULT_MEMBERSHIP_CATEGORY];
+        $options = get_option('wicket_membership_plugin_options', []);
 
-        /*
-         * Filters the membership category slugs.
-         *
-         * Allows clients to extend or override the default membership category.
-         *
-         * @since 1.0.0
-         *
-         * @param array $categories Array of category slugs.
-         */
-        $this->membership_categories = apply_filters('wicket/finance/membership_categories', $categories);
+        $selected_categories = $options['wicket_show_mship_order_org_search']['categorychoice'] ?? [];
 
-        return $this->membership_categories;
+        // Normalize and ensure we only return valid IDs.
+        $this->membership_category_ids = array_values(array_filter(array_map('absint', (array) $selected_categories)));
+
+        return $this->membership_category_ids;
     }
 
     /**
