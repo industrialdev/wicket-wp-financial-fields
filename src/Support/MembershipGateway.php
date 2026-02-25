@@ -215,20 +215,11 @@ class MembershipGateway
      */
     private function get_config_id_from_product(int $product_id): ?int
     {
-        // Get product meta for membership tier
-        $tier_post_id = get_post_meta($product_id, 'membership_tier_post_id', true);
-
-        if (empty($tier_post_id)) {
+        $membership_tier = \Wicket_Memberships\Membership_Tier::get_tier_by_product_id($product_id);
+        if (!$membership_tier) {
             return null;
         }
 
-        // Get config ID from tier
-        $config_id = get_post_meta($tier_post_id, 'membership_config_post_id', true);
-
-        if (empty($config_id)) {
-            return null;
-        }
-
-        return (int) $config_id;
+        return $membership_tier->tier_data['config_id'] ?? null;
     }
 }
