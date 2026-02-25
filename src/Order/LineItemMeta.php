@@ -237,6 +237,19 @@ class LineItemMeta
                 );
             }
 
+            // Enforce GL-code is always present
+            $gl_code = $item->get_meta('_wicket_finance_gl_code', true);
+            if (empty($gl_code)) {
+                $product = $item->get_product();
+                if ($product) {
+                    $gl_code = $this->product_meta->get_gl_code($product);
+                    if (!empty($gl_code)) {
+                        $item->update_meta_data('_wicket_finance_gl_code', $gl_code);
+                        $changes[] = 'GL Code: auto-populated from product';
+                    }
+                }
+            }
+
             if (!empty($changes)) {
                 $item->save();
 
