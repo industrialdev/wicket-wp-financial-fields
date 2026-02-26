@@ -33,7 +33,7 @@ class Eligibility
     private $logger;
 
     /**
-    * Cached membership category IDs.
+     * Cached membership category IDs.
      *
      * @var array|null
      */

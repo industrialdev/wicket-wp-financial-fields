@@ -15,6 +15,11 @@ uses(TestCase::class);
 
 describe('Eligibility', function () {
     beforeEach(function () {
+        Functions\when('absint')->alias(function ($value) {
+            return abs((int) $value);
+        });
+        Functions\when('get_option')->justReturn([]);
+
         $this->settings = Mockery::mock(FinanceSettings::class);
         $this->logger = Mockery::mock(Logger::class);
         $this->eligibility = new Eligibility($this->settings, $this->logger);
@@ -120,9 +125,11 @@ describe('Eligibility', function () {
             $parent->shouldReceive('get_category_ids')->andReturn([5]);
 
             Functions\when('wc_get_product')->justReturn($parent);
-
-            $term = (object) ['slug' => 'membership'];
-            Functions\when('get_term')->justReturn($term);
+            Functions\when('get_option')->justReturn([
+                'wicket_show_mship_order_org_search' => [
+                    'categorychoice' => [5],
+                ],
+            ]);
 
             expect($this->eligibility->is_membership_product($variation))->toBeTrue();
         });
@@ -133,58 +140,61 @@ describe('Eligibility', function () {
             $product->shouldReceive('get_parent_id')->andReturn(0);
             $product->shouldReceive('get_category_ids')->andReturn([5]);
 
-            $term = (object) ['slug' => 'membership'];
-            Functions\when('get_term')->justReturn($term);
+            Functions\when('get_option')->justReturn([
+                'wicket_show_mship_order_org_search' => [
+                    'categorychoice' => [5],
+                ],
+            ]);
 
             expect($this->eligibility->is_membership_product($product))->toBeTrue();
         });
 
-        it('applies wicket/finance/membership_categories filter', function () {
+        it('uses membership category IDs from options', function () {
             $product = Mockery::mock('WC_Product');
             $product->shouldReceive('is_type')->with('variation')->andReturn(false);
             $product->shouldReceive('get_parent_id')->andReturn(0);
-            $product->shouldReceive('get_category_ids')->andReturn([5]);
-
-            $term = (object) ['slug' => 'custom-membership'];
-            Functions\when('get_term')->justReturn($term);
-
-            Functions\when('apply_filters')->alias(function ($hook, $value) {
-                if ($hook === 'wicket/finance/membership_categories') {
-                    return ['membership', 'custom-membership'];
-                }
-
-                return $value;
-            });
+            $product->shouldReceive('get_category_ids')->andReturn([25]);
+            Functions\when('get_option')->justReturn([
+                'wicket_show_mship_order_org_search' => [
+                    'categorychoice' => [10, 25],
+                ],
+            ]);
 
             expect($this->eligibility->is_membership_product($product))->toBeTrue();
         });
     });
 
-    describe('get_membership_categories()', function () {
-        it('returns default membership category', function () {
-            Functions\when('apply_filters')->alias(function ($hook, $value) {
-                return $value;
-            });
+    describe('get_membership_category_ids()', function () {
+        it('returns empty array when no option exists', function () {
+            Functions\when('get_option')->justReturn([]);
 
-            expect($this->eligibility->get_membership_categories())->toBe(['membership']);
+            expect($this->eligibility->get_membership_category_ids())->toBe([]);
         });
 
-        it('applies filter and returns result', function () {
-            Functions\when('apply_filters')->justReturn(['membership', 'premium']);
+        it('normalizes and filters invalid category IDs', function () {
+            Functions\when('get_option')->justReturn([
+                'wicket_show_mship_order_org_search' => [
+                    'categorychoice' => ['7', 'foo', 0, -3, 15],
+                ],
+            ]);
 
-            expect($this->eligibility->get_membership_categories())->toBe(['membership', 'premium']);
+            expect($this->eligibility->get_membership_category_ids())->toBe([7, 3, 15]);
         });
 
         it('caches result', function () {
             $callCount = 0;
-            Functions\when('apply_filters')->alias(function () use (&$callCount) {
+            Functions\when('get_option')->alias(function () use (&$callCount) {
                 $callCount++;
 
-                return ['membership'];
+                return [
+                    'wicket_show_mship_order_org_search' => [
+                        'categorychoice' => [7],
+                    ],
+                ];
             });
 
-            $this->eligibility->get_membership_categories();
-            $this->eligibility->get_membership_categories();
+            $this->eligibility->get_membership_category_ids();
+            $this->eligibility->get_membership_category_ids();
 
             expect($callCount)->toBe(1);
         });
