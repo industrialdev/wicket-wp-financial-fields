@@ -134,6 +134,102 @@ describe('DynamicDates', function () {
         });
     });
 
+    describe('on_pending_parent_order_created()', function () {
+        it('returns early when system disabled', function () {
+            $this->settings->shouldReceive('is_system_enabled')->once()->andReturn(false);
+
+            $subscription = Mockery::mock('WC_Subscription');
+            $subscription->shouldReceive('get_parent_id')->never();
+
+            $this->dynamic_dates->on_pending_parent_order_created($subscription);
+        });
+
+        it('writes dynamic dates for trigger status on parent order', function () {
+            $this->settings->shouldReceive('is_system_enabled')->once()->andReturn(true);
+            $this->settings->shouldReceive('is_trigger_status')->with('pending')->once()->andReturn(true);
+
+            $product = Mockery::mock('WC_Product');
+            $product->shouldReceive('get_id')->andReturn(100);
+            $item = Mockery::mock('WC_Order_Item_Product');
+            $item->shouldReceive('get_product')->andReturn($product);
+
+            $subscription = Mockery::mock('WC_Subscription');
+            $subscription->shouldReceive('get_parent_id')->once()->andReturn(999);
+
+            $order = Mockery::mock('WC_Order');
+            $order->shouldReceive('get_status')->once()->andReturn('pending');
+            $order->shouldReceive('get_items')->andReturn([1 => $item]);
+
+            Functions\when('wc_get_order')->justReturn($order);
+            $this->membership_gateway->shouldReceive('is_available')->once()->andReturn(true);
+            $this->eligibility->shouldReceive('is_membership_product')->with($product)->once()->andReturn(true);
+            $this->eligibility->shouldReceive('is_deferred_revenue_required')->with($product)->once()->andReturn(true);
+            $this->membership_gateway->shouldReceive('calculate_membership_dates')
+                ->once()
+                ->with(100)
+                ->andReturn([
+                    'start_date' => '2024-01-01T00:00:00+00:00',
+                    'end_date' => '2024-12-31T23:59:59+00:00',
+                ]);
+            $this->line_item_meta->shouldReceive('update_dates')
+                ->once()
+                ->with(999, 1, '2024-01-01', '2024-12-31', 'System');
+            $this->logger->shouldReceive('info')->once();
+
+            $this->dynamic_dates->on_pending_parent_order_created($subscription);
+        });
+    });
+
+    describe('on_renewal_order_created()', function () {
+        it('returns the order unchanged when system disabled', function () {
+            $this->settings->shouldReceive('is_system_enabled')->once()->andReturn(false);
+
+            $order = Mockery::mock('WC_Order');
+            $subscription = Mockery::mock('WC_Subscription');
+
+            $result = $this->dynamic_dates->on_renewal_order_created($order, $subscription);
+
+            expect($result)->toBe($order);
+        });
+
+        it('writes dynamic dates for initial trigger status and returns order', function () {
+            $this->settings->shouldReceive('is_system_enabled')->once()->andReturn(true);
+            $this->settings->shouldReceive('is_trigger_status')->with('processing')->once()->andReturn(true);
+
+            $product = Mockery::mock('WC_Product');
+            $product->shouldReceive('get_id')->andReturn(100);
+            $item = Mockery::mock('WC_Order_Item_Product');
+            $item->shouldReceive('get_product')->andReturn($product);
+
+            $order = Mockery::mock('WC_Order');
+            $order->shouldReceive('get_status')->once()->andReturn('processing');
+            $order->shouldReceive('get_id')->once()->andReturn(999);
+            $order->shouldReceive('get_items')->andReturn([1 => $item]);
+
+            $subscription = Mockery::mock('WC_Subscription');
+
+            Functions\when('wc_get_order')->justReturn($order);
+            $this->membership_gateway->shouldReceive('is_available')->once()->andReturn(true);
+            $this->eligibility->shouldReceive('is_membership_product')->with($product)->once()->andReturn(true);
+            $this->eligibility->shouldReceive('is_deferred_revenue_required')->with($product)->once()->andReturn(true);
+            $this->membership_gateway->shouldReceive('calculate_membership_dates')
+                ->once()
+                ->with(100)
+                ->andReturn([
+                    'start_date' => '2024-01-01T00:00:00+00:00',
+                    'end_date' => '2024-12-31T23:59:59+00:00',
+                ]);
+            $this->line_item_meta->shouldReceive('update_dates')
+                ->once()
+                ->with(999, 1, '2024-01-01', '2024-12-31', 'System');
+            $this->logger->shouldReceive('info')->once();
+
+            $result = $this->dynamic_dates->on_renewal_order_created($order, $subscription);
+
+            expect($result)->toBe($order);
+        });
+    });
+
     describe('on_membership_created()', function () {
         it('returns early when system disabled', function () {
             $this->settings->shouldReceive('is_system_enabled')->once()->andReturn(false);

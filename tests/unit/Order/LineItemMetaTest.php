@@ -20,6 +20,7 @@ describe('LineItemMeta', function () {
         $this->date_formatter = Mockery::mock(DateFormatter::class);
         $this->logger = Mockery::mock(Logger::class);
         $this->line_item_meta = new LineItemMeta($this->product_meta, $this->date_formatter, $this->logger);
+        Functions\when('wcs_get_subscriptions_for_order')->justReturn([]);
     });
 
     describe('populate_line_item_meta()', function () {
@@ -145,6 +146,64 @@ describe('LineItemMeta', function () {
             $this->logger->shouldReceive('info')->once();
 
             $result = $this->line_item_meta->update_dates(999, 1, '2024-01-01', '2024-12-31', 'Membership');
+
+            expect($result)->toBeTrue();
+        });
+
+        it('syncs updated finance meta to matching subscription line items', function () {
+            $item = Mockery::mock('WC_Order_Item_Product');
+            $item->shouldReceive('get_meta')->with('_wicket_finance_start_date', true)->andReturn('2023-01-01', '2024-01-01');
+            $item->shouldReceive('get_meta')->with('_wicket_finance_end_date', true)->andReturn('2023-12-31', '2024-12-31');
+            $item->shouldReceive('get_meta')->with('_wicket_finance_gl_code', true)->andReturn('GL-123');
+            $item->shouldReceive('update_meta_data')->with('_wicket_finance_start_date', '2024-01-01')->once();
+            $item->shouldReceive('update_meta_data')->with('_wicket_finance_end_date', '2024-12-31')->once();
+            $item->shouldReceive('save')->once();
+            $item->shouldReceive('get_product_id')->andReturn(100);
+            $item->shouldReceive('get_variation_id')->andReturn(0);
+            $item->shouldReceive('get_id')->andReturn(1);
+
+            $subscription_item = Mockery::mock('WC_Order_Item_Product');
+            $subscription_item->shouldReceive('get_product_id')->andReturn(100);
+            $subscription_item->shouldReceive('get_variation_id')->andReturn(0);
+            $subscription_item->shouldReceive('get_meta')->with('_wicket_finance_start_date', true)->andReturn('2023-01-01');
+            $subscription_item->shouldReceive('get_meta')->with('_wicket_finance_end_date', true)->andReturn('2023-12-31');
+            $subscription_item->shouldReceive('get_meta')->with('_wicket_finance_gl_code', true)->andReturn('GL-OLD');
+            $subscription_item->shouldReceive('update_meta_data')->with('_wicket_finance_start_date', '2024-01-01')->once();
+            $subscription_item->shouldReceive('update_meta_data')->with('_wicket_finance_end_date', '2024-12-31')->once();
+            $subscription_item->shouldReceive('update_meta_data')->with('_wicket_finance_gl_code', 'GL-123')->once();
+            $subscription_item->shouldReceive('save')->once();
+
+            $subscription = Mockery::mock('WC_Subscription');
+            $subscription->shouldReceive('get_items')->andReturn([11 => $subscription_item]);
+            $subscription->shouldReceive('save')->once();
+            $subscription->shouldReceive('get_id')->andReturn(555);
+
+            $order = Mockery::mock('WC_Order');
+            $order->shouldReceive('get_item')->with(1)->andReturn($item);
+            $order->shouldReceive('add_order_note')->once()->with(
+                '[System] changed Term Start Date: 2023-01-01 → 2024-01-01, Term End Date: 2023-12-31 → 2024-12-31'
+            );
+            $order->shouldReceive('save')->once();
+            $order->shouldReceive('get_id')->andReturn(999);
+
+            Functions\when('wcs_get_subscriptions_for_order')->justReturn([555 => $subscription]);
+
+            Functions\when('wc_get_order')->justReturn($order);
+
+            $this->logger->shouldReceive('info')->once()->with(
+                'Line item dates updated automatically',
+                Mockery::type('array')
+            );
+            $this->logger->shouldReceive('info')->once()->with(
+                'Synced finance meta to subscription line items',
+                Mockery::on(function ($context) {
+                    return $context['order_id'] === 999
+                        && $context['subscription_id'] === 555
+                        && $context['source_item_id'] === 1;
+                })
+            );
+
+            $result = $this->line_item_meta->update_dates(999, 1, '2024-01-01', '2024-12-31');
 
             expect($result)->toBeTrue();
         });

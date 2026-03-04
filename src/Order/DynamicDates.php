@@ -101,6 +101,12 @@ class DynamicDates
         // Order creation hook (for initial status)
         add_action('woocommerce_new_order', [$this, 'on_order_created'], 10, 2);
 
+        // Pending parent order creation action (admin order action in Subscriptions).
+        add_action('woocommerce_order_action_wcs_create_pending_parent', [$this, 'on_pending_parent_order_created'], 20, 1);
+
+        // Renewal order creation hook specific to subscriptions.
+        add_filter('wcs_renewal_order_created', [$this, 'on_renewal_order_created'], 10, 2);
+
         // Membership creation hook - overwrites with authoritative dates
         add_action('wicket_member_create_record', [$this, 'on_membership_created'], 10, 3);
     }
@@ -146,6 +152,62 @@ class DynamicDates
         if ($this->settings->is_trigger_status($status)) {
             $this->write_dynamic_dates($order_id, $status);
         }
+    }
+
+    /**
+     * Handles pending parent order creation from admin action.
+     *
+     * @param \WC_Subscription $subscription Subscription being processed.
+     * @return void
+     */
+    public function on_pending_parent_order_created(\WC_Subscription $subscription): void
+    {
+        if (!$this->settings->is_system_enabled()) {
+            return;
+        }
+
+        $parent_order_id = $subscription->get_parent_id();
+        if (empty($parent_order_id)) {
+            return;
+        }
+
+        $parent_order = wc_get_order($parent_order_id);
+        if (!$parent_order) {
+            return;
+        }
+
+        $status = $parent_order->get_status();
+
+        // Check if initial status is a trigger
+        if ($this->settings->is_trigger_status($status)) {
+            $this->write_dynamic_dates((int) $parent_order_id, $status);
+        }
+    }
+
+    /**
+     * Handles renewal order creation.
+     *
+     * This callback is attached to a filter and must always return the order.
+     *
+     * @param \WC_Order        $order        Newly created subscription order.
+     * @param \WC_Subscription $subscription Subscription that generated the order.
+     * @return \WC_Order
+     */
+    public function on_renewal_order_created(\WC_Order $order, \WC_Subscription $subscription): \WC_Order
+    {
+        if (!$this->settings->is_system_enabled()) {
+            return $order;
+        }
+
+        $status = $order->get_status();
+
+        // Check if initial status is a trigger
+        if ($this->settings->is_trigger_status($status)) {
+            $this->write_dynamic_dates($order->get_id(), $status);
+        }
+
+        // Since this is a filter, return the order object.
+        return $order;
     }
 
     /**
