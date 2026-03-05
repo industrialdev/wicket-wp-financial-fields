@@ -26,7 +26,7 @@ class FinanceSettings
     /**
      * Order status identifiers.
      */
-    public const STATUS_DRAFT = 'draft';
+    public const STATUS_DRAFT = 'checkout-draft';
     public const STATUS_PENDING = 'pending';
     public const STATUS_ON_HOLD = 'on-hold';
     public const STATUS_PROCESSING = 'processing';

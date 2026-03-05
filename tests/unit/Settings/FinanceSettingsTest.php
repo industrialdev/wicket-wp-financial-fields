@@ -27,7 +27,7 @@ describe('FinanceSettings', function () {
 
     describe('Status constants', function () {
         it('has correct order status identifiers', function () {
-            expect(FinanceSettings::STATUS_DRAFT)->toBe('draft');
+            expect(FinanceSettings::STATUS_DRAFT)->toBe('checkout-draft');
             expect(FinanceSettings::STATUS_PENDING)->toBe('pending');
             expect(FinanceSettings::STATUS_ON_HOLD)->toBe('on-hold');
             expect(FinanceSettings::STATUS_PROCESSING)->toBe('processing');
@@ -140,7 +140,7 @@ describe('FinanceSettings', function () {
             $result = $this->settings->get_dynamic_date_triggers();
 
             expect($result)->toBe([
-                'draft',
+                'checkout-draft',
                 'pending',
                 'completed',
                 'processing',
@@ -173,7 +173,7 @@ describe('FinanceSettings', function () {
                 return $option === 'wicket_finance_trigger_draft' ? '1' : '0';
             });
 
-            expect($this->settings->is_trigger_status('draft'))->toBeTrue();
+            expect($this->settings->is_trigger_status('checkout-draft'))->toBeTrue();
             expect($this->settings->is_trigger_status('pending'))->toBeFalse();
         });
     });

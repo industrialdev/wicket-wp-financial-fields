@@ -75,5 +75,5 @@
     "test:coverage": "Run Pest tests with HTML coverage report"
   },
   "type": "wordpress-plugin",
-  "version": "1.0.5"
+  "version": "1.0.6"
 }
