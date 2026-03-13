@@ -271,9 +271,6 @@ class LineItemMeta
                     'changes' => $changes,
                     'user' => $user_name,
                 ]);
-
-                // Push the updated finance meta to any related subscription line items
-                $this->sync_line_item_to_subscriptions($order, $item);
             }
         }
 
@@ -330,82 +327,7 @@ class LineItemMeta
             'source' => $source,
         ]);
 
-        // Keep subscription line items in sync when system updates dates
-        $this->sync_line_item_to_subscriptions($order, $item);
-
         return true;
-    }
-
-    /**
-     * Syncs finance meta from an order line item to matching subscription line items.
-     *
-     * @param \WC_Order               $order       Order object (avoids re-query).
-     * @param \WC_Order_Item_Product  $source_item Source order item.
-     * @return void
-     */
-    private function sync_line_item_to_subscriptions(\WC_Order $order, \WC_Order_Item_Product $source_item): void
-    {
-        // Only run when WooCommerce Subscriptions is available
-        if (!function_exists('wcs_get_subscriptions_for_order')) {
-            return;
-        }
-
-        $subscriptions = wcs_get_subscriptions_for_order($order, ['order_type' => ['any']]);
-        if (empty($subscriptions)) {
-            return;
-        }
-
-        $product_id = $source_item->get_product_id();
-        $variation_id = $source_item->get_variation_id();
-
-        $meta_to_copy = [
-            '_wicket_finance_start_date' => $source_item->get_meta('_wicket_finance_start_date', true),
-            '_wicket_finance_end_date' => $source_item->get_meta('_wicket_finance_end_date', true),
-            '_wicket_finance_gl_code' => $source_item->get_meta('_wicket_finance_gl_code', true),
-        ];
-
-        foreach ($subscriptions as $subscription) {
-            $updated_items = [];
-
-            foreach ($subscription->get_items() as $sub_item_id => $sub_item) {
-                if (!($sub_item instanceof \WC_Order_Item_Product)) {
-                    continue;
-                }
-
-                $matches_product = ($sub_item->get_product_id() === $product_id)
-                    || ($variation_id && $sub_item->get_variation_id() === $variation_id);
-
-                if (!$matches_product) {
-                    continue;
-                }
-
-                $changes = [];
-
-                foreach ($meta_to_copy as $key => $value) {
-                    $current = $sub_item->get_meta($key, true);
-                    if ($current !== $value) {
-                        $sub_item->update_meta_data($key, $value);
-                        $changes[$key] = [$current ?: 'empty', $value ?: 'empty'];
-                    }
-                }
-
-                if (!empty($changes)) {
-                    $sub_item->save();
-                    $updated_items[$sub_item_id] = $changes;
-                }
-            }
-
-            if (!empty($updated_items)) {
-                $subscription->save();
-
-                $this->logger->info('Synced finance meta to subscription line items', [
-                    'order_id' => $order->get_id(),
-                    'subscription_id' => $subscription->get_id(),
-                    'source_item_id' => $source_item->get_id(),
-                    'updated_items' => $updated_items,
-                ]);
-            }
-        }
     }
 
     /**
