@@ -356,8 +356,14 @@ class DynamicDates
                 continue;
             }
 
+            // Determine if this renewing an existing membership. If so, we need to get the existing membership data to calculate the future dates.
+            $existing_membership_post_id = wc_get_order_item_meta($item_id, '_membership_post_id_renew', true) ?? null;
+            if ($existing_membership_post_id) {
+                $existing_membership_data = \Wicket_Memberships\Helper::get_post_meta($existing_membership_post_id);
+            }
+
             // Calculate membership dates
-            $dates = $this->membership_gateway->calculate_membership_dates($product->get_id());
+            $dates = $this->membership_gateway->calculate_membership_dates($product->get_id(), $existing_membership_data ?? []);
 
             if (!$dates || empty($dates['start_date']) || empty($dates['end_date'])) {
                 $this->logger->warning('Failed to calculate membership dates', [
@@ -388,6 +394,7 @@ class DynamicDates
                 'order_id' => $order_id,
                 'item_id' => $item_id,
                 'product_id' => $product->get_id(),
+                'membership_post_id' => $existing_membership_post_id ?? null,
                 'status' => $status,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
