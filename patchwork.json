@@ -1,8 +1,0 @@
-{
-    "redefinable-internals": [
-        "is_dir",
-        "file_exists",
-        "error_log",
-        "gmdate"
-    ]
-}
