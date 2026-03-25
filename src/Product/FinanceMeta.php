@@ -61,6 +61,9 @@ class FinanceMeta
         // Add Finance Mapping tab
         add_filter('woocommerce_product_data_tabs', [$this, 'add_finance_mapping_tab']);
         add_action('woocommerce_product_data_panels', [$this, 'render_finance_mapping_panel']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_product_admin_assets']);
+        add_action('enqueue_block_editor_assets', [$this, 'enqueue_block_editor_product_assets']);
+        add_action('all_admin_notices', [$this, 'render_product_validation_notices']);
 
         // Add deferral date fields to General tab (simple products)
         add_action('woocommerce_product_options_general_product_data', [$this, 'render_deferral_dates_simple']);
@@ -73,9 +76,6 @@ class FinanceMeta
 
         // Save variation meta
         add_action('woocommerce_save_product_variation', [$this, 'save_variation_meta'], 10, 2);
-
-        // Validation
-        add_filter('woocommerce_product_data_store_cpt_prepare_props_to_update', [$this, 'validate_product_dates'], 10, 2);
     }
 
     /**
@@ -162,8 +162,11 @@ class FinanceMeta
                 'label' => __('Deferral Start Date', 'wicket-finance'),
                 'type' => 'date',
                 'value' => $product->get_meta('_wicket_finance_deferral_start_date', true),
+                'wrapper_class' => 'wicket-finance-deferral-date-field wicket-finance-deferral-date-field-start',
                 'custom_attributes' => [
                     'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                    'data-wicket-finance-date-role' => 'start',
+                    'data-wicket-finance-date-group' => 'simple',
                 ],
             ]);
 
@@ -172,8 +175,11 @@ class FinanceMeta
             'label' => __('Deferral End Date', 'wicket-finance'),
             'type' => 'date',
             'value' => $product->get_meta('_wicket_finance_deferral_end_date', true),
+            'wrapper_class' => 'wicket-finance-deferral-date-field wicket-finance-deferral-date-field-end',
             'custom_attributes' => [
                 'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                'data-wicket-finance-date-role' => 'end',
+                'data-wicket-finance-date-group' => 'simple',
             ],
         ]);
         ?>
@@ -210,9 +216,11 @@ class FinanceMeta
                 'label' => __('Deferral Start Date', 'wicket-finance'),
                 'type' => 'date',
                 'value' => $variation_obj->get_meta('_wicket_finance_deferral_start_date', true),
-                'wrapper_class' => 'form-row form-row-first',
+                'wrapper_class' => 'form-row form-row-first wicket-finance-deferral-date-field wicket-finance-deferral-date-field-start',
                 'custom_attributes' => [
                     'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                    'data-wicket-finance-date-role' => 'start',
+                    'data-wicket-finance-date-group' => (string) $loop,
                 ],
             ]);
 
@@ -222,14 +230,101 @@ class FinanceMeta
             'label' => __('Deferral End Date', 'wicket-finance'),
             'type' => 'date',
             'value' => $variation_obj->get_meta('_wicket_finance_deferral_end_date', true),
-            'wrapper_class' => 'form-row form-row-last',
+            'wrapper_class' => 'form-row form-row-last wicket-finance-deferral-date-field wicket-finance-deferral-date-field-end',
             'custom_attributes' => [
                 'pattern' => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                'data-wicket-finance-date-role' => 'end',
+                'data-wicket-finance-date-group' => (string) $loop,
             ],
         ]);
         ?>
         </div>
         <?php
+    }
+
+    /**
+     * Enqueue admin assets for WooCommerce product deferral date validation.
+     *
+     * @param string $hook_suffix Current admin page hook suffix.
+     * @return void
+     */
+    public function enqueue_product_admin_assets(string $hook_suffix): void
+    {
+        if (!$this->should_enqueue_product_admin_assets($hook_suffix)) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'wicket-finance-product-admin',
+            WICKET_FINANCE_URL . 'assets/css/admin-product-validation.css',
+            [],
+            WICKET_FINANCE_VERSION
+        );
+
+        wp_enqueue_script(
+            'wicket-finance-product-admin',
+            WICKET_FINANCE_URL . 'assets/js/admin-product-validation.js',
+            [],
+            WICKET_FINANCE_VERSION,
+            true
+        );
+
+        wp_add_inline_script(
+            'wicket-finance-product-admin',
+            'window.wicketFinanceProductValidation = ' . wp_json_encode([
+                'missingStartMessage' => __('Deferral Start Date is required when Deferral End Date is set. Add a start date to continue.', 'wicket-finance'),
+                'invalidRangeMessage' => __('Deferral End Date must be the same as or later than Deferral Start Date.', 'wicket-finance'),
+                'noticeMessage' => __('Some finance deferral dates need attention. Each Deferral End Date requires a Deferral Start Date, and End Date cannot be earlier than Start Date.', 'wicket-finance'),
+            ]) . ';',
+            'before'
+        );
+    }
+
+    /**
+     * Enqueue product admin assets when WooCommerce loads block-editor assets.
+     *
+     * @return void
+     */
+    public function enqueue_block_editor_product_assets(): void
+    {
+        if (!$this->is_product_editor_screen()) {
+            return;
+        }
+
+        $this->enqueue_product_admin_assets('');
+    }
+
+    /**
+     * Render persisted validation notices on product admin screens.
+     *
+     * @return void
+     */
+    public function render_product_validation_notices(): void
+    {
+        if (!$this->is_product_editor_screen()) {
+            return;
+        }
+
+        $errors = $this->get_persisted_validation_errors();
+        if ($errors === []) {
+            return;
+        }
+
+        if ($this->woocommerce_meta_box_error_store_has_errors()) {
+            $this->clear_persisted_validation_errors();
+
+            return;
+        }
+
+        echo '<div class="notice notice-error wicket-finance-product-notice is-dismissible">';
+
+        foreach ($errors as $error) {
+            echo '<p>' . esc_html($error) . '</p>';
+        }
+
+        echo '</div>';
+
+        $this->clear_persisted_validation_errors();
     }
 
     /**
@@ -252,13 +347,22 @@ class FinanceMeta
 
         // Save deferral dates (simple products only)
         if (!$product->is_type('variable')) {
+            $start_date = isset($_POST['_wicket_finance_deferral_start_date'])
+                ? $this->date_formatter->sanitize_date_input(wp_unslash($_POST['_wicket_finance_deferral_start_date']))
+                : '';
+            $end_date = isset($_POST['_wicket_finance_deferral_end_date'])
+                ? $this->date_formatter->sanitize_date_input(wp_unslash($_POST['_wicket_finance_deferral_end_date']))
+                : '';
+
+            if (!$this->validate_posted_deferral_dates($start_date, $end_date)) {
+                return;
+            }
+
             if (isset($_POST['_wicket_finance_deferral_start_date'])) {
-                $start_date = $this->date_formatter->sanitize_date_input(wp_unslash($_POST['_wicket_finance_deferral_start_date']));
                 $product->update_meta_data('_wicket_finance_deferral_start_date', $start_date);
             }
 
             if (isset($_POST['_wicket_finance_deferral_end_date'])) {
-                $end_date = $this->date_formatter->sanitize_date_input(wp_unslash($_POST['_wicket_finance_deferral_end_date']));
                 $product->update_meta_data('_wicket_finance_deferral_end_date', $end_date);
             }
         }
@@ -278,14 +382,23 @@ class FinanceMeta
             return;
         }
 
+        $start_date = isset($_POST['variable_wicket_finance_deferral_start_date'][$loop])
+            ? $this->date_formatter->sanitize_date_input(wp_unslash($_POST['variable_wicket_finance_deferral_start_date'][$loop]))
+            : '';
+        $end_date = isset($_POST['variable_wicket_finance_deferral_end_date'][$loop])
+            ? $this->date_formatter->sanitize_date_input(wp_unslash($_POST['variable_wicket_finance_deferral_end_date'][$loop]))
+            : '';
+
+        if (!$this->validate_posted_deferral_dates($start_date, $end_date, $loop)) {
+            return;
+        }
+
         // Save deferral dates
         if (isset($_POST['variable_wicket_finance_deferral_start_date'][$loop])) {
-            $start_date = $this->date_formatter->sanitize_date_input(wp_unslash($_POST['variable_wicket_finance_deferral_start_date'][$loop]));
             $variation->update_meta_data('_wicket_finance_deferral_start_date', $start_date);
         }
 
         if (isset($_POST['variable_wicket_finance_deferral_end_date'][$loop])) {
-            $end_date = $this->date_formatter->sanitize_date_input(wp_unslash($_POST['variable_wicket_finance_deferral_end_date'][$loop]));
             $variation->update_meta_data('_wicket_finance_deferral_end_date', $end_date);
         }
 
@@ -293,35 +406,219 @@ class FinanceMeta
     }
 
     /**
-     * Validates product deferral dates before save.
+     * Validates posted product deferral dates before save.
      *
-     * @param array       $props_to_update Props being updated.
-     * @param \WC_Product $product         Product object.
-     * @return array Props to update.
+     * @param string   $start_date Start date in Y-m-d format.
+     * @param string   $end_date   End date in Y-m-d format.
+     * @param int|null $loop       Variation loop index, or null for simple products.
+     * @return bool True when valid, false otherwise.
      */
-    public function validate_product_dates(array $props_to_update, \WC_Product $product): array
+    private function validate_posted_deferral_dates(string $start_date, string $end_date, ?int $loop = null): bool
     {
-        $start_date = $product->get_meta('_wicket_finance_deferral_start_date', true);
-        $end_date = $product->get_meta('_wicket_finance_deferral_end_date', true);
-
         // Skip if no dates set
         if (empty($start_date) && empty($end_date)) {
-            return $props_to_update;
+            return true;
         }
 
-        // If start date is set, end date is required
-        if (!empty($start_date) && empty($end_date)) {
-            wc_add_notice(__('Finance: End date is required when start date is set.', 'wicket-finance'), 'error');
+        if (!empty($end_date) && empty($start_date)) {
+            $this->add_product_validation_error($this->get_validation_message(
+                __('Finance: Deferral Start Date is required when Deferral End Date is set.', 'wicket-finance'),
+                $loop
+            ));
+
+            return false;
         }
 
         // Validate date range
         if (!empty($start_date) && !empty($end_date)) {
             if (!$this->date_formatter->validate_date_range($start_date, $end_date)) {
-                wc_add_notice(__('Finance: End date must be greater than or equal to start date.', 'wicket-finance'), 'error');
+                $this->add_product_validation_error($this->get_validation_message(
+                    __('Finance: Deferral End Date must be greater than or equal to Deferral Start Date.', 'wicket-finance'),
+                    $loop
+                ));
+
+                return false;
             }
         }
 
-        return $props_to_update;
+        return true;
+    }
+
+    /**
+     * Adds a WooCommerce product admin validation error.
+     *
+     * @param string $message Error message.
+     * @return void
+     */
+    private function add_product_validation_error(string $message): void
+    {
+        $this->persist_validation_error($message);
+
+        if (class_exists(\WC_Admin_Meta_Boxes::class)) {
+            \WC_Admin_Meta_Boxes::add_error($message);
+
+            return;
+        }
+
+        wc_add_notice($message, 'error');
+    }
+
+    /**
+     * Formats a validation message for simple or variation context.
+     *
+     * @param string   $message Base validation message.
+     * @param int|null $loop    Variation loop index, or null for simple products.
+     * @return string
+     */
+    private function get_validation_message(string $message, ?int $loop = null): string
+    {
+        if ($loop === null) {
+            return $message;
+        }
+
+        return sprintf(
+            /* translators: 1: variation number, 2: validation message */
+            __('Variation #%1$d: %2$s', 'wicket-finance'),
+            $loop + 1,
+            $message
+        );
+    }
+
+    /**
+     * Determine whether admin assets should be loaded for the current screen.
+     *
+     * @param string $hook_suffix Current admin page hook suffix.
+     * @return bool
+     */
+    private function should_enqueue_product_admin_assets(string $hook_suffix): bool
+    {
+        if (in_array($hook_suffix, ['post.php', 'post-new.php'], true) && $this->is_product_editor_screen()) {
+            return true;
+        }
+
+        if ($this->is_product_wc_admin_page()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check whether the current admin screen is editing a product.
+     *
+     * @return bool
+     */
+    private function is_product_editor_screen(): bool
+    {
+        $screen = get_current_screen();
+        if (!$screen) {
+            return false;
+        }
+
+        if ($screen->post_type === 'product') {
+            return true;
+        }
+
+        return $this->is_product_wc_admin_page();
+    }
+
+    /**
+     * Check whether the current request is a WooCommerce wc-admin product editor page.
+     *
+     * @return bool
+     */
+    private function is_product_wc_admin_page(): bool
+    {
+        $page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
+        $path = isset($_GET['path']) ? sanitize_text_field(wp_unslash($_GET['path'])) : '';
+
+        if ($page !== 'wc-admin') {
+            return false;
+        }
+
+        if (strpos($path, '/product/') === 0 || strpos($path, '/add-product') === 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Persist a validation error so it can be rendered after the product save redirect.
+     *
+     * @param string $message Error message.
+     * @return void
+     */
+    private function persist_validation_error(string $message): void
+    {
+        $user_id = get_current_user_id();
+        if ($user_id <= 0) {
+            return;
+        }
+
+        $meta_key = 'wicket_finance_product_validation_errors';
+        $errors = get_user_meta($user_id, $meta_key, true);
+        if (!is_array($errors)) {
+            $errors = [];
+        }
+
+        if (!in_array($message, $errors, true)) {
+            $errors[] = $message;
+        }
+
+        update_user_meta($user_id, $meta_key, $errors);
+    }
+
+    /**
+     * Get persisted validation errors for the current user.
+     *
+     * @return array<int, string>
+     */
+    private function get_persisted_validation_errors(): array
+    {
+        $user_id = get_current_user_id();
+        if ($user_id <= 0) {
+            return [];
+        }
+
+        $errors = get_user_meta($user_id, 'wicket_finance_product_validation_errors', true);
+
+        if (!is_array($errors)) {
+            return [];
+        }
+
+        return array_values(array_filter(array_map('strval', $errors)));
+    }
+
+    /**
+     * Clear persisted validation errors for the current user.
+     *
+     * @return void
+     */
+    private function clear_persisted_validation_errors(): void
+    {
+        $user_id = get_current_user_id();
+        if ($user_id <= 0) {
+            return;
+        }
+
+        delete_user_meta($user_id, 'wicket_finance_product_validation_errors');
+    }
+
+    /**
+     * Check whether WooCommerce already has meta box errors queued for output.
+     *
+     * @return bool
+     */
+    private function woocommerce_meta_box_error_store_has_errors(): bool
+    {
+        if (!class_exists(\WC_Admin_Meta_Boxes::class)) {
+            return false;
+        }
+
+        $errors = get_option(\WC_Admin_Meta_Boxes::ERROR_STORE, []);
+
+        return is_array($errors) && $errors !== [];
     }
 
     /**
