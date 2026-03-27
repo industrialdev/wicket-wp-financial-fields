@@ -4,6 +4,7 @@
     const errorClass = 'wicket-finance-field-has-error';
     const errorMessageClass = 'wicket-finance-field-error';
     const noticeClass = 'wicket-finance-product-notice';
+    const defaultMissingEndMessage = 'Deferral End Date is required when Deferral Start Date is set.';
     const defaultMissingStartMessage = 'Deferral Start Date is required when Deferral End Date is set.';
     const defaultInvalidRangeMessage = 'Deferral End Date must be the same as or later than Deferral Start Date.';
     const defaultNoticeMessage = 'Some finance deferral dates need attention.';
@@ -69,24 +70,41 @@
         }
     }
 
-    function setGroupValidity(group) {
+    function getGroupValidationState(group) {
         const startValue = group.start.value.trim();
         const endValue = group.end.value.trim();
-        const startWrapper = getFieldWrapper(group.start);
-        const endWrapper = getFieldWrapper(group.end);
+        const missingEndMessage = validationConfig.missingEndMessage || defaultMissingEndMessage;
         const missingStartMessage = validationConfig.missingStartMessage || defaultMissingStartMessage;
         const invalidRangeMessage = validationConfig.invalidRangeMessage || defaultInvalidRangeMessage;
 
-        let invalidField = null;
-        let errorMessage = '';
+        if (startValue !== '' && endValue === '') {
+            return {
+                invalidField: group.end,
+                errorMessage: missingEndMessage,
+            };
+        }
 
         if (endValue !== '' && startValue === '') {
-            invalidField = group.start;
-            errorMessage = missingStartMessage;
-        } else if (startValue !== '' && endValue !== '' && endValue < startValue) {
-            invalidField = group.end;
-            errorMessage = invalidRangeMessage;
+            return {
+                invalidField: group.start,
+                errorMessage: missingStartMessage,
+            };
         }
+
+        if (startValue !== '' && endValue !== '' && endValue < startValue) {
+            return {
+                invalidField: group.end,
+                errorMessage: invalidRangeMessage,
+            };
+        }
+
+        return null;
+    }
+
+    function setGroupValidity(group) {
+        const startWrapper = getFieldWrapper(group.start);
+        const endWrapper = getFieldWrapper(group.end);
+        const validationState = getGroupValidationState(group);
 
         group.start.setCustomValidity('');
         group.end.setCustomValidity('');
@@ -106,7 +124,7 @@
         clearErrorMessage(group.start);
         clearErrorMessage(group.end);
 
-        if (!invalidField) {
+        if (!validationState) {
             return false;
         }
 
@@ -118,12 +136,12 @@
             endWrapper.classList.add(errorClass);
         }
 
-        invalidField.setAttribute('aria-invalid', 'true');
-        invalidField.setCustomValidity(errorMessage);
+        validationState.invalidField.setAttribute('aria-invalid', 'true');
+        validationState.invalidField.setCustomValidity(validationState.errorMessage);
 
-        const errorElement = createOrUpdateErrorMessage(invalidField, errorMessage);
+        const errorElement = createOrUpdateErrorMessage(validationState.invalidField, validationState.errorMessage);
         if (errorElement) {
-            invalidField.setAttribute('aria-describedby', errorElement.id);
+            validationState.invalidField.setAttribute('aria-describedby', errorElement.id);
         }
 
         return true;
@@ -208,7 +226,7 @@
 
         setGroupValidity(group);
 
-        if (!getFieldGroups().some((fieldGroup) => fieldGroup.end.value.trim() !== '' && fieldGroup.start.value.trim() === '')) {
+        if (!getFieldGroups().some((fieldGroup) => getGroupValidationState(fieldGroup) !== null)) {
             clearFormNotice();
         }
     }
@@ -221,15 +239,13 @@
         }
 
         event.preventDefault();
-        if (firstInvalidGroup.end.value.trim() !== '' && firstInvalidGroup.start.value.trim() === '') {
-            firstInvalidGroup.start.focus();
-            firstInvalidGroup.start.reportValidity();
-
+        const validationState = getGroupValidationState(firstInvalidGroup);
+        if (!validationState) {
             return;
         }
 
-        firstInvalidGroup.end.focus();
-        firstInvalidGroup.end.reportValidity();
+        validationState.invalidField.focus();
+        validationState.invalidField.reportValidity();
     }
 
     function isSaveActionTrigger(target) {
@@ -257,15 +273,13 @@
 
         event.preventDefault();
         event.stopPropagation();
-        if (firstInvalidGroup.end.value.trim() !== '' && firstInvalidGroup.start.value.trim() === '') {
-            firstInvalidGroup.start.focus();
-            firstInvalidGroup.start.reportValidity();
-
+        const validationState = getGroupValidationState(firstInvalidGroup);
+        if (!validationState) {
             return;
         }
 
-        firstInvalidGroup.end.focus();
-        firstInvalidGroup.end.reportValidity();
+        validationState.invalidField.focus();
+        validationState.invalidField.reportValidity();
     }
 
     function initValidation() {

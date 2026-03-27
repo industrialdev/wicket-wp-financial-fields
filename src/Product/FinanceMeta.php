@@ -272,9 +272,10 @@ class FinanceMeta
         wp_add_inline_script(
             'wicket-finance-product-admin',
             'window.wicketFinanceProductValidation = ' . wp_json_encode([
+                'missingEndMessage' => __('Deferral End Date is required when Deferral Start Date is set. Add an end date to continue.', 'wicket-finance'),
                 'missingStartMessage' => __('Deferral Start Date is required when Deferral End Date is set. Add a start date to continue.', 'wicket-finance'),
                 'invalidRangeMessage' => __('Deferral End Date must be the same as or later than Deferral Start Date.', 'wicket-finance'),
-                'noticeMessage' => __('Some finance deferral dates need attention. Each Deferral End Date requires a Deferral Start Date, and End Date cannot be earlier than Start Date.', 'wicket-finance'),
+                'noticeMessage' => __('Some finance deferral dates need attention. Start Date and End Date must be entered together, and End Date cannot be earlier than Start Date.', 'wicket-finance'),
             ]) . ';',
             'before'
         );
@@ -418,6 +419,15 @@ class FinanceMeta
         // Skip if no dates set
         if (empty($start_date) && empty($end_date)) {
             return true;
+        }
+
+        if (!empty($start_date) && empty($end_date)) {
+            $this->add_product_validation_error($this->get_validation_message(
+                __('Finance: Deferral End Date is required when Deferral Start Date is set.', 'wicket-finance'),
+                $loop
+            ));
+
+            return false;
         }
 
         if (!empty($end_date) && empty($start_date)) {
