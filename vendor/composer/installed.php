@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'industrialdev/wicket-wp-financial-fields',
-        'pretty_version' => '1.0.8',
-        'version' => '1.0.8.0',
+        'pretty_version' => '1.0.10',
+        'version' => '1.0.10.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'industrialdev/wicket-wp-financial-fields' => array(
-            'pretty_version' => '1.0.8',
-            'version' => '1.0.8.0',
+            'pretty_version' => '1.0.10',
+            'version' => '1.0.10.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',

@@ -192,11 +192,6 @@ class Plugin
 
         // Load text domain
         add_action('init', [$this, 'load_textdomain']);
-
-        // Log plugin initialization
-        $this->logger->info('Wicket Financial Fields plugin initialized', [
-            'version' => $this->version,
-        ]);
     }
 
     /**
