@@ -265,6 +265,10 @@ composer format          # Fix code style
 composer check           # Run lint + test
 ```
 
+## Documentation
+
+For complete documentation, see **[docs/index.md](docs/index.md)**.
+
 ## Support
 
 For issues, questions, or feature requests, contact Wicket Inc.
