@@ -1,3 +1,23 @@
+---
+title: "Architecture Design"
+audience: [developer]
+php_class: Plugin
+source_files: [
+  "src/Plugin.php",
+  "src/Settings/FinanceSettings.php",
+  "src/Settings/WPSettingsSettings.php",
+  "src/Product/FinanceMeta.php",
+  "src/Order/LineItemMeta.php",
+  "src/Order/DynamicDates.php",
+  "src/Display/CustomerRenderer.php",
+  "src/Export/WooExportAdapter.php",
+  "src/Support/Logger.php",
+  "src/Support/DateFormatter.php",
+  "src/Support/Eligibility.php",
+  "src/Support/MembershipGateway.php"
+]
+---
+
 # DESIGN.md
 
 ## Architecture Overview

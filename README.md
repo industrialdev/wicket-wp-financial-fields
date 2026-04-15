@@ -157,7 +157,6 @@ All changes create audit notes with user and timestamp.
 ### Hooks & Filters
 
 **Filters:**
-- `wicket/finance/membership_categories` - Extend membership category slugs (default: ['membership'])
 - `wicket/finance/debug_enabled` - Enable debug logging
 
 **Constants:**

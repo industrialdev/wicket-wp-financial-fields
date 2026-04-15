@@ -1,8 +1,10 @@
 ---
 title: "Wicket Financial Fields Overview"
 audience: [implementer, support]
-php_class: Plugin
-source_files: ["src/Plugin.php", "src/Settings/FinanceSettings.php"]
+wp_admin_path: "Wicket → Settings → Finance"
+php_class: FinanceSettings
+db_option_prefix: wicket_finance_
+source_files: ["src/Settings/FinanceSettings.php", "src/Settings/WPSettingsSettings.php"]
 ---
 
 # Overview
@@ -27,7 +29,7 @@ Wicket Financial Fields maps WooCommerce orders to GL codes and handles deferred
 
 ## Settings
 
-Settings are stored with the `wicket_finance_` prefix. The main settings page is in **WooCommerce → Settings → Wicket Finance**.
+Settings are stored with the `wicket_finance_` prefix. The main settings page is in **Wicket → Settings → Finance**.
 
 ### Key Settings
 
