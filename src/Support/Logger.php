@@ -43,7 +43,7 @@ class Logger
 
         $context['source'] = self::LOG_SOURCE;
 
-        return Wicket()->log()->log($level, $message, $context);
+        return \Wicket()->log()->log($level, $message, $context);
     }
 
     public function critical(string $message, array $context = []): void
