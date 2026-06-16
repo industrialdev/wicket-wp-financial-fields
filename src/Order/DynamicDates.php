@@ -215,10 +215,12 @@ class DynamicDates
      *
      * @param array $membership         Membership data array.
      * @param bool  $processing_renewal Whether this is a renewal.
-     * @param bool  $status_cycled      Whether status cycled.
+     * @param bool  $status_cycled      Whether status cycled. Optional for back-compat
+     *                                  with wicket-wp-memberships versions that fire
+     *                                  `wicket_member_create_record` with only 2 args.
      * @return void
      */
-    public function on_membership_created(array $membership, bool $processing_renewal, bool $status_cycled): void
+    public function on_membership_created(array $membership, bool $processing_renewal, bool $status_cycled = false): void
     {
         if (!$this->settings->is_system_enabled()) {
             return;

@@ -56,5 +56,5 @@
     "cs:lint": "Run PHP CS Fixer to check coding standards"
   },
   "type": "wordpress-plugin",
-  "version": "1.0.11"
+  "version": "1.0.12"
 }
