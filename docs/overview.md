@@ -50,5 +50,3 @@ Finance data can be surfaced in:
 
 ## Documentation Links
 
-- [Engineering: Design](engineering/DESIGN.md) — Architecture and design decisions
-- [Engineering: Specs](engineering/SPECS.md) — Technical specifications
