@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Wicket\Finance\Order;
 
 use Wicket\Finance\Settings\FinanceSettings;
-use Wicket\Finance\Support\DateFormatter;
 use Wicket\Finance\Support\Eligibility;
 use Wicket\Finance\Support\Logger;
 use Wicket\Finance\Support\MembershipGateway;
@@ -58,13 +57,6 @@ class DynamicDates
     private $logger;
 
     /**
-     * Date formatter.
-     *
-     * @var DateFormatter
-     */
-    private $date_formatter;
-
-    /**
      * Constructor.
      *
      * @param FinanceSettings   $settings            Settings facade.
@@ -85,7 +77,6 @@ class DynamicDates
         $this->membership_gateway = $membership_gateway;
         $this->eligibility = $eligibility;
         $this->logger = $logger;
-        $this->date_formatter = new DateFormatter();
     }
 
     /**
@@ -257,9 +248,9 @@ class DynamicDates
             return;
         }
 
-        // Convert ISO 8601 to Y-m-d
-        $start_date = $this->date_formatter->from_iso_8601($dates['start_date']);
-        $end_date = $this->date_formatter->from_iso_8601($dates['end_date']);
+        // Convert ISO 8601 to Y-m-d in the MDP timezone
+        $start_date = $this->membership_gateway->to_mdp_local_date($dates['start_date']);
+        $end_date = $this->membership_gateway->to_mdp_local_date($dates['end_date']);
 
         if (empty($start_date) || empty($end_date)) {
             $this->logger->error('Failed to convert authoritative dates from ISO 8601', [
@@ -376,9 +367,9 @@ class DynamicDates
                 continue;
             }
 
-            // Convert ISO 8601 to storage format (Y-m-d)
-            $start_date = $this->date_formatter->from_iso_8601($dates['start_date']);
-            $end_date = $this->date_formatter->from_iso_8601($dates['end_date']);
+            // Convert ISO 8601 to storage format (Y-m-d) in the MDP timezone
+            $start_date = $this->membership_gateway->to_mdp_local_date($dates['start_date']);
+            $end_date = $this->membership_gateway->to_mdp_local_date($dates['end_date']);
 
             if (empty($start_date) || empty($end_date)) {
                 $this->logger->error('Failed to convert dates from ISO 8601', [

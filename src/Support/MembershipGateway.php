@@ -206,6 +206,41 @@ class MembershipGateway
     }
 
     /**
+     * Converts an ISO 8601 datetime (from the memberships plugin) to a Y-m-d
+     * date in the MDP timezone.
+     *
+     * The memberships plugin computes day boundaries (e.g. end-of-day 23:59:59)
+     * in the MDP timezone, then stores/returns them as UTC. Naively truncating
+     * the UTC string to its date portion can land on the wrong calendar day
+     * (e.g. 23:59:59 Eastern -> 03:59:59 UTC the next day). Converting back to
+     * the MDP timezone before truncating recovers the intended local day.
+     *
+     * @param string $iso_date ISO 8601 datetime string.
+     * @return string Date in Y-m-d format, or empty string if invalid.
+     */
+    public function to_mdp_local_date(string $iso_date): string
+    {
+        if (empty($iso_date)) {
+            return '';
+        }
+
+        try {
+            $mdp_timezone = new \DateTimeZone($_ENV['WICKET_MSHIP_MDP_TIMEZONE'] ?? 'UTC');
+            $date = new \DateTime($iso_date);
+            $date->setTimezone($mdp_timezone);
+
+            return $date->format('Y-m-d');
+        } catch (\Exception $e) {
+            $this->logger->error('Exception converting ISO date to MDP date', [
+                'iso_date' => $iso_date,
+                'error' => $e->getMessage(),
+            ]);
+
+            return '';
+        }
+    }
+
+    /**
      * Gets membership config ID from product.
      *
      * Attempts to find the membership config associated with a product.
