@@ -225,9 +225,8 @@ class MembershipGateway
         }
 
         try {
-            $mdp_timezone = new \DateTimeZone($_ENV['WICKET_MSHIP_MDP_TIMEZONE'] ?? 'UTC');
             $date = new \DateTime($iso_date);
-            $date->setTimezone($mdp_timezone);
+            $date->setTimezone(wicket_time_get_mdp_timezone());
 
             return $date->format('Y-m-d');
         } catch (\Exception $e) {
