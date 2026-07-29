@@ -5,6 +5,20 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 <!-- new releases inserted below this line -->
 
+## [1.0.14] - 2026-07-29
+
+### Changed
+- use wicket_time_get_mdp_timezone() base plugin helper
+
+### Fixed
+- correct off-by-one day error in membership term dates
+
+### Documentation
+- add automated release process to AGENTS.md #norelease
+- self-contained release automation reference #norelease
+- add release automation reference #norelease
+
+
 ## [1.0.13] - 2026-07-09
 
 ### Added
