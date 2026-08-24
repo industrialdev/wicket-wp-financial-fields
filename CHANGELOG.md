@@ -5,6 +5,15 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 <!-- new releases inserted below this line -->
 
+## [1.0.15] - 2026-08-24
+
+### Fixed
+- accept string item keys on order item hooks
+
+### Documentation
+- add PR description template #norelease
+
+
 ## [1.0.14] - 2026-07-29
 
 ### Changed
