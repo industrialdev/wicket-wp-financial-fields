@@ -115,12 +115,15 @@ class LineItemMeta
     /**
      * Renders line item fields in admin.
      *
-     * @param int                    $item_id Item ID.
+     * $item_id follows the same rule as CustomerRenderer::render_on_order_items():
+     * items on an unsaved order arrive keyed as strings, so the hint stays permissive.
+     *
+     * @param int|string             $item_id Item ID, or the item's key on an unsaved order.
      * @param \WC_Order_Item_Product $item    Order item.
      * @param \WC_Product|null       $product Product object.
      * @return void
      */
-    public function render_line_item_fields(int $item_id, \WC_Order_Item_Product $item, $product): void
+    public function render_line_item_fields(int|string $item_id, \WC_Order_Item_Product $item, $product): void
     {
         if (!$product) {
             return;

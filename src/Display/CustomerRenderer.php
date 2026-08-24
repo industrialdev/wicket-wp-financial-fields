@@ -91,12 +91,18 @@ class CustomerRenderer
     /**
      * Renders dates on order items (handles all contexts based on eligibility).
      *
-     * @param int              $item_id Item ID.
+     * $item_id is whatever key the order used for the item, so it is not always an
+     * int: items on an unsaved order are keyed as strings ('new:line_items0'), which
+     * is how WooCommerce builds the dummy order behind the email preview and test
+     * send. With strict_types an int hint turns that into a fatal TypeError mid-render,
+     * breaking the preview of every email that lists order items.
+     *
+     * @param int|string       $item_id Item ID, or the item's key on an unsaved order.
      * @param \WC_Order_Item   $item    Order item.
      * @param \WC_Order        $order   Order object.
      * @return void
      */
-    public function render_on_order_items(int $item_id, \WC_Order_Item $item, \WC_Order $order): void
+    public function render_on_order_items(int|string $item_id, \WC_Order_Item $item, \WC_Order $order): void
     {
         if (!($item instanceof \WC_Order_Item_Product)) {
             return;
