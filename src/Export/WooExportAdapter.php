@@ -95,12 +95,17 @@ class WooExportAdapter
     /**
      * Adds finance data to product export.
      *
+     * $product stays nullable: the CSV export extension that fires this filter
+     * is not vendored in the stack, so its exact payload is unverified. The body
+     * reads meta off the item only, and a hint that narrow is the same
+     * strict_types hook-boundary crash this plugin already hit twice.
+     *
      * @param array              $data    Export data.
      * @param \WC_Order_Item     $item    Order item.
-     * @param \WC_Product        $product Product object.
+     * @param \WC_Product|null   $product Product object.
      * @return array Modified data.
      */
-    public function add_export_data(array $data, \WC_Order_Item $item, \WC_Product $product): array
+    public function add_export_data(array $data, \WC_Order_Item $item, ?\WC_Product $product): array
     {
         if (!($item instanceof \WC_Order_Item_Product)) {
             return $data;

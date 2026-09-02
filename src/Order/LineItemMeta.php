@@ -126,10 +126,10 @@ class LineItemMeta
      *
      * @param int|string       $item_id Item ID, or the item's key on an unsaved order.
      * @param \WC_Order_Item   $item    Order item.
-     * @param \WC_Product|null $product Product object.
+     * @param \WC_Product|null $product Product object, null for shipping/fee rows and deleted products.
      * @return void
      */
-    public function render_line_item_fields(int|string $item_id, \WC_Order_Item $item, $product): void
+    public function render_line_item_fields(int|string $item_id, \WC_Order_Item $item, ?\WC_Product $product): void
     {
         if (!($item instanceof \WC_Order_Item_Product)) {
             return;
