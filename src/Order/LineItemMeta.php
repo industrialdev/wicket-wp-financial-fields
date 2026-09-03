@@ -118,13 +118,23 @@ class LineItemMeta
      * $item_id follows the same rule as CustomerRenderer::render_on_order_items():
      * items on an unsaved order arrive keyed as strings, so the hint stays permissive.
      *
-     * @param int|string             $item_id Item ID, or the item's key on an unsaved order.
-     * @param \WC_Order_Item_Product $item    Order item.
-     * @param \WC_Product|null       $product Product object.
+     * $item stays hinted as the base class: woocommerce_before_order_itemmeta also
+     * fires for shipping, fee, and tax rows (admin order edit), which pass a
+     * WC_Order_Item_Shipping etc. With a WC_Order_Item_Product hint and strict_types
+     * that is an uncaught TypeError mid-render, fataling the whole order screen on
+     * any order that ships (PACE flat rate, WWID-2383).
+     *
+     * @param int|string       $item_id Item ID, or the item's key on an unsaved order.
+     * @param \WC_Order_Item   $item    Order item.
+     * @param \WC_Product|null $product Product object, null for shipping/fee rows and deleted products.
      * @return void
      */
-    public function render_line_item_fields(int|string $item_id, \WC_Order_Item_Product $item, $product): void
+    public function render_line_item_fields(int|string $item_id, \WC_Order_Item $item, ?\WC_Product $product): void
     {
+        if (!($item instanceof \WC_Order_Item_Product)) {
+            return;
+        }
+
         if (!$product) {
             return;
         }
