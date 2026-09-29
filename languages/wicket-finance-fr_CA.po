@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wicket Financial Fields 1.0.16\n"
 "Report-Msgid-Bugs-To: https://wicket.io\n"
-"POT-Creation-Date: 2026-09-29T18:58:31+00:00\n"
-"PO-Revision-Date: 2026-09-29 19:01+0000\n"
+"POT-Creation-Date: 2026-09-29T20:11:47+00:00\n"
+"PO-Revision-Date: 2026-09-29 20:12+0000\n"
 "Last-Translator: Wicket Inc.\n"
 "Language-Team: French (Canada)\n"
 "Language: fr_CA\n"
@@ -38,15 +38,18 @@ msgstr "https://wicket.io"
 
 #. translators: Label shown to customers, followed by a date. Term: the period the purchase covers.
 #. translators: Order line item field label. Term: the period the purchase covers.
+msgctxt "label"
 msgid "Term Start Date:"
 msgstr "Date de début de la période :"
 
 #. translators: Label shown to customers, followed by a date. Term: the period the purchase covers.
 #. translators: Order line item field label. Term: the period the purchase covers.
+msgctxt "label"
 msgid "Term End Date:"
 msgstr "Date de fin de la période :"
 
 #. translators: Export column name. GL is short for general ledger (accounting account code).
+msgctxt "label"
 msgid "Finance GL Code"
 msgstr "Code de grand livre (finances)"
 
@@ -60,92 +63,96 @@ msgstr "Date de fin de la période (finances)"
 
 #. translators: Export column name. GL is short for general ledger (accounting account code).
 #. translators: Product field label. GL is short for general ledger (accounting account code).
+msgctxt "label"
 msgid "GL Code"
 msgstr "Code de grand livre"
 
 #. translators: Export column name. Term: the period the purchase covers (e.g. a membership term).
+msgctxt "label"
 msgid "Term Start Date"
 msgstr "Date de début de la période"
 
 #. translators: Export column name. Term: the period the purchase covers (e.g. a membership term).
+msgctxt "label"
 msgid "Term End Date"
 msgstr "Date de fin de la période"
 
-msgctxt "order note author for automatic changes"
+msgctxt "order note author"
 msgid "System (Membership Created)"
 msgstr "Système (adhésion créée)"
 
-msgctxt "order note author for automatic changes"
+msgctxt "order note author"
 msgid "System"
 msgstr "Système"
 
+msgctxt "label"
 msgid "Finance Fields"
 msgstr "Champs financiers"
 
 #. translators: Order line item field label. GL is short for general ledger.
+msgctxt "label"
 msgid "GL Code:"
 msgstr "Code de grand livre :"
 
-msgctxt "order line item term date validation error"
 msgid "Finance: End date must be the same as or later than start date."
 msgstr "Finances : la date de fin doit être identique ou postérieure à la date de début."
 
 msgid "Finance: End date is required when start date is set."
 msgstr "Finances : la date de fin est obligatoire lorsque la date de début est définie."
 
-msgctxt "order note change"
 msgid "GL Code: auto-populated from product"
 msgstr "Code de grand livre : rempli automatiquement à partir du produit"
 
 #. translators: 1: user or system name, 2: comma-separated list of changes.
 #, php-format
-msgctxt "order note summary"
+msgctxt "order note"
 msgid "[%1$s] changed %2$s"
 msgstr "[%1$s] a modifié %2$s"
 
 #. translators: 1: previous date, 2: new date.
 #, php-format
-msgctxt "order note change"
+msgctxt "order note"
 msgid "Term Start Date: %1$s → %2$s"
 msgstr "Date de début de la période : %1$s → %2$s"
 
-msgctxt "order note placeholder for a blank date"
+msgctxt "value placeholder"
 msgid "empty"
 msgstr "vide"
 
 #. translators: 1: previous date, 2: new date.
 #, php-format
-msgctxt "order note change"
+msgctxt "order note"
 msgid "Term End Date: %1$s → %2$s"
 msgstr "Date de fin de la période : %1$s → %2$s"
 
+msgctxt "label"
 msgid "Finance Mapping"
 msgstr "Correspondance financière"
 
 msgid "GL mapping from your financial management system."
 msgstr "Correspondance avec le grand livre de votre système de gestion financière."
 
+msgctxt "label"
 msgid "Deferred revenue required"
 msgstr "Produits reportés requis"
 
 msgid "Select if this product will use a deferred revenue schedule in your financial management system."
 msgstr "Indiquez si ce produit utilisera un calendrier de produits reportés dans votre système de gestion financière."
 
+msgctxt "label"
 msgid "Deferral Start Date"
 msgstr "Date de début du report"
 
+msgctxt "label"
 msgid "Deferral End Date"
 msgstr "Date de fin du report"
 
-msgctxt "product deferral date validation error"
 msgid "Deferral End Date is required when Deferral Start Date is set."
 msgstr "La date de fin du report est obligatoire lorsque la date de début du report est définie."
 
-msgctxt "product deferral date validation error"
 msgid "Deferral Start Date is required when Deferral End Date is set."
 msgstr "La date de début du report est obligatoire lorsque la date de fin du report est définie."
 
-msgctxt "product deferral date validation error"
 msgid "Deferral End Date must be the same as or later than Deferral Start Date."
 msgstr "La date de fin du report doit être identique ou postérieure à la date de début du report."
 
@@ -154,98 +161,85 @@ msgstr "Certaines dates de report financières doivent être vérifiées. La dat
 
 #. translators: %s: validation error message.
 #, php-format
-msgctxt "validation error prefix"
+msgctxt "message"
 msgid "Finance: %s"
 msgstr "Finances : %s"
 
 #. translators: 1: variation number, 2: validation message
 #, php-format
+msgctxt "message"
 msgid "Variation #%1$d: %2$s"
 msgstr "Variation n° %1$d : %2$s"
 
-msgctxt "settings tab label"
+msgctxt "label"
 msgid "Finance"
 msgstr "Finances"
 
-msgctxt "finance settings section heading"
 msgid "Revenue Deferral Dates — Feature Control"
 msgstr "Dates de report des produits : contrôle de la fonction"
 
-msgctxt "finance settings checkbox label"
 msgid "Enable Finance Mapping System"
 msgstr "Activer le système de correspondance financière"
 
-msgctxt "finance settings field description"
 msgid "Enable the entire finance mapping and deferral dates system."
 msgstr "Active l'ensemble du système de correspondance financière et des dates de report."
 
-msgctxt "finance settings section heading"
 msgid "Revenue Deferral Dates — Customer Visibility"
 msgstr "Dates de report des produits : visibilité pour les clients"
 
-msgctxt "finance settings field label"
 msgid "Product Categories for Customer Display"
 msgstr "Catégories de produits affichées aux clients"
 
-msgctxt "finance settings field description"
 msgid "Select product categories that should display deferral dates to customers. Only products in these categories will show deferral dates on customer-facing surfaces."
 msgstr "Sélectionnez les catégories de produits dont les dates de report doivent être affichées aux clients. Seuls les produits de ces catégories afficheront les dates de report dans les pages destinées aux clients."
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "Order Confirmation Page"
 msgstr "Page de confirmation de commande"
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates on the order confirmation page."
 msgstr "Afficher les dates de report sur la page de confirmation de commande."
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "Email Notifications"
 msgstr "Notifications par courriel"
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in email notifications (Pending payment, On hold, Processing, Completed, Renewal)."
 msgstr "Afficher les dates de report dans les notifications par courriel (En attente de paiement, En attente, En cours, Terminée, Renouvellement)."
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "My Account › Orders"
 msgstr "Mon compte › Commandes"
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in the My Account order details view."
 msgstr "Afficher les dates de report dans les détails de commande de Mon compte."
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "Subscriptions Details"
 msgstr "Détails des abonnements"
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in subscription details (WooCommerce Subscriptions required)."
 msgstr "Afficher les dates de report dans les détails des abonnements (WooCommerce Subscriptions requis)."
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "PDF Invoices"
 msgstr "Factures PDF"
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in PDF invoices (supported invoice plugin required)."
 msgstr "Afficher les dates de report dans les factures PDF (extension de facturation compatible requise)."
 
-msgctxt "finance settings section heading"
 msgid "Revenue Deferral Dates — Dynamic Deferral Dates Trigger"
 msgstr "Dates de report des produits : déclencheur des dates de report dynamiques"
 
-msgctxt "finance settings section help text"
 msgid "Determines the WooCommerce order status that triggers dynamic deferral dates to be written. Regardless of this setting, dates will always be written when the order reaches \"Processing\" status."
 msgstr "Détermine l'état de commande WooCommerce qui déclenche l'écriture des dates de report dynamiques. Peu importe ce paramètre, les dates sont toujours écrites lorsque la commande passe à l'état « En cours »."
 
 #. translators: %s: order status name.
 #, php-format
-msgctxt "finance settings required order status label"
+msgctxt "label"
 msgid "%s (Required)"
 msgstr "%s (obligatoire)"
 
-msgctxt "finance settings field description"
 msgid "This option is always enabled and cannot be disabled."
 msgstr "Cette option est toujours activée et ne peut pas être désactivée."
 
@@ -255,7 +249,6 @@ msgstr "Brouillon"
 
 #. translators: %s: order status name.
 #, php-format
-msgctxt "finance settings field description"
 msgid "Write dynamic deferral dates when order status changes to %s."
 msgstr "Écrire les dates de report dynamiques lorsque l'état de la commande passe à %s."
 
@@ -266,12 +259,12 @@ msgstr "<strong>Champs financiers Wicket</strong> nécessite l'installation et l
 
 #. translators: %s: required plugin name.
 #, php-format
-msgctxt "plugin activation error message"
 msgid "Wicket Financial Fields requires %s to be installed and activated."
 msgstr "Champs financiers Wicket nécessite l'installation et l'activation de %s."
 
 msgid "Wicket Financial Fields requires PHP 8.3 or higher. Please upgrade your PHP version."
 msgstr "Champs financiers Wicket nécessite PHP 8.3 ou une version ultérieure. Veuillez mettre à jour votre version de PHP."
 
+msgctxt "label"
 msgid "Plugin Activation Error"
 msgstr "Erreur d'activation de l'extension"
