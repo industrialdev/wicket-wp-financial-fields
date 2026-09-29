@@ -218,7 +218,7 @@ class LineItemMeta
             // Validate date range
             if (!empty($new_start) && !empty($new_end)) {
                 if (!$this->date_formatter->validate_date_range($new_start, $new_end)) {
-                    wc_add_notice(__('Finance: End date must be greater than or equal to start date.', 'wicket-finance'), 'error');
+                    wc_add_notice(_x('Finance: End date must be the same as or later than start date.', 'order line item term date validation error', 'wicket-finance'), 'error');
                     continue;
                 }
             }
@@ -234,20 +234,12 @@ class LineItemMeta
 
             if ($old_start !== $new_start) {
                 $item->update_meta_data('_wicket_finance_start_date', $new_start);
-                $changes[] = sprintf(
-                    'Term Start Date: %s → %s',
-                    $old_start ?: 'empty',
-                    $new_start ?: 'empty'
-                );
+                $changes[] = $this->format_start_date_change($old_start, $new_start);
             }
 
             if ($old_end !== $new_end) {
                 $item->update_meta_data('_wicket_finance_end_date', $new_end);
-                $changes[] = sprintf(
-                    'Term End Date: %s → %s',
-                    $old_end ?: 'empty',
-                    $new_end ?: 'empty'
-                );
+                $changes[] = $this->format_end_date_change($old_end, $new_end);
             }
 
             // Enforce GL-code is always present
@@ -258,7 +250,7 @@ class LineItemMeta
                     $gl_code = $this->product_meta->get_gl_code($product);
                     if (!empty($gl_code)) {
                         $item->update_meta_data('_wicket_finance_gl_code', $gl_code);
-                        $changes[] = 'GL Code: auto-populated from product';
+                        $changes[] = _x('GL Code: auto-populated from product', 'order note change', 'wicket-finance');
                     }
                 }
             }
@@ -268,13 +260,9 @@ class LineItemMeta
 
                 // Add audit note
                 $user = wp_get_current_user();
-                $user_name = $user->exists() ? $user->display_name : 'System';
+                $user_name = $user->exists() ? $user->display_name : _x('System', 'order note author for automatic changes', 'wicket-finance');
 
-                $note = sprintf(
-                    '[%s] changed %s',
-                    $user_name,
-                    implode(', ', $changes)
-                );
+                $note = $this->format_change_note($user_name, $changes);
 
                 $order->add_order_note($note);
 
@@ -320,14 +308,10 @@ class LineItemMeta
         $item->save();
 
         // Add audit note
-        $note = sprintf(
-            '[%s] changed Term Start Date: %s → %s, Term End Date: %s → %s',
-            $source,
-            $old_start ?: 'empty',
-            $start_date,
-            $old_end ?: 'empty',
-            $end_date
-        );
+        $note = $this->format_change_note($source, [
+            $this->format_start_date_change($old_start, $start_date),
+            $this->format_end_date_change($old_end, $end_date),
+        ]);
 
         $order->add_order_note($note);
         $order->save();
@@ -356,5 +340,56 @@ class LineItemMeta
             'end_date' => $item->get_meta('_wicket_finance_end_date', true),
             'gl_code' => $item->get_meta('_wicket_finance_gl_code', true),
         ];
+    }
+
+    /**
+     * Formats an audit note from a list of changes.
+     *
+     * @param string   $author  Who made the change.
+     * @param string[] $changes Change descriptions.
+     * @return string
+     */
+    private function format_change_note(string $author, array $changes): string
+    {
+        return sprintf(
+            /* translators: 1: user or system name, 2: comma-separated list of changes. */
+            _x('[%1$s] changed %2$s', 'order note summary', 'wicket-finance'),
+            $author,
+            implode(', ', $changes)
+        );
+    }
+
+    /**
+     * Formats a term start date change for an audit note.
+     *
+     * @param mixed $old Previous date.
+     * @param mixed $new New date.
+     * @return string
+     */
+    private function format_start_date_change($old, $new): string
+    {
+        return sprintf(
+            /* translators: 1: previous date, 2: new date. */
+            _x('Term Start Date: %1$s → %2$s', 'order note change', 'wicket-finance'),
+            (string) $old ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance'),
+            (string) $new ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance')
+        );
+    }
+
+    /**
+     * Formats a term end date change for an audit note.
+     *
+     * @param mixed $old Previous date.
+     * @param mixed $new New date.
+     * @return string
+     */
+    private function format_end_date_change($old, $new): string
+    {
+        return sprintf(
+            /* translators: 1: previous date, 2: new date. */
+            _x('Term End Date: %1$s → %2$s', 'order note change', 'wicket-finance'),
+            (string) $old ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance'),
+            (string) $new ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance')
+        );
     }
 }

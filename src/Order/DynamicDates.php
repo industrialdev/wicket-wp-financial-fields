@@ -288,7 +288,7 @@ class DynamicDates
                     $item_id,
                     $start_date,
                     $end_date,
-                    'System (Membership Created)'
+                    _x('System (Membership Created)', 'order note author for automatic changes', 'wicket-finance')
                 );
 
                 $this->logger->info('Authoritative membership dates written to line item', [
@@ -381,7 +381,7 @@ class DynamicDates
             }
 
             // Update line item dates
-            $this->line_item_meta->update_dates($order_id, $item_id, $start_date, $end_date, 'System');
+            $this->line_item_meta->update_dates($order_id, $item_id, $start_date, $end_date, _x('System', 'order note author for automatic changes', 'wicket-finance'));
 
             $this->logger->info('Dynamic dates written for membership product', [
                 'order_id' => $order_id,
