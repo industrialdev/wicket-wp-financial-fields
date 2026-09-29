@@ -240,68 +240,6 @@ class FinanceSettings
     }
 
     /**
-     * Gets default settings for initial setup.
-     *
-     * @return array Default settings.
-     */
-    public function get_defaults(): array
-    {
-        return [
-            'eligible_categories' => [],
-            'visibility_surfaces' => [],
-            'dynamic_date_triggers' => [self::STATUS_PROCESSING],
-        ];
-    }
-
-    /**
-     * Resets all settings to defaults.
-     *
-     * @return bool True on success, false on failure.
-     */
-    public function reset_to_defaults(): bool
-    {
-        $defaults = $this->get_defaults();
-        $success = true;
-
-        $option_defaults = [
-            'wicket_finance_enable_system' => '0',
-            'wicket_finance_customer_visible_categories' => $defaults['eligible_categories'],
-            'wicket_finance_display_order_confirmation' => '0',
-            'wicket_finance_display_emails' => '0',
-            'wicket_finance_display_my_account' => '0',
-            'wicket_finance_display_subscriptions' => '0',
-            'wicket_finance_display_pdf_invoices' => '0',
-            'wicket_finance_trigger_draft' => '0',
-            'wicket_finance_trigger_pending' => '0',
-            'wicket_finance_trigger_on_hold' => '0',
-            'wicket_finance_trigger_processing' => '1',
-            'wicket_finance_trigger_completed' => '0',
-        ];
-
-        foreach ($option_defaults as $key => $value) {
-            if (!update_option($key, $value)) {
-                $success = false;
-            }
-        }
-
-        return $success;
-    }
-
-    /**
-     * Gets all settings as array.
-     *
-     * @return array All settings.
-     */
-    public function get_all(): array
-    {
-        return [
-            'eligible_categories' => $this->get_eligible_categories(),
-            'visibility_surfaces' => $this->get_visibility_surfaces(),
-            'dynamic_date_triggers' => $this->get_dynamic_date_triggers(),
-        ];
-    }
-
-    /**
      * Gets an option value with base plugin compatibility.
      *
      * @param string $option_name Option name.

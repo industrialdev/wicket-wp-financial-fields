@@ -132,24 +132,4 @@ class DateFormatter
 
         return $this->to_storage_format($date);
     }
-
-    /**
-     * Gets the current date in storage format.
-     *
-     * @return string Current date in Y-m-d format.
-     */
-    public function get_current_date(): string
-    {
-        return gmdate(self::STORAGE_FORMAT);
-    }
-
-    /**
-     * Gets storage format string.
-     *
-     * @return string Storage format (Y-m-d).
-     */
-    public function get_storage_format(): string
-    {
-        return self::STORAGE_FORMAT;
-    }
 }
