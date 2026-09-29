@@ -161,19 +161,19 @@ class LineItemMeta
             <h4><?php esc_html_e('Finance Fields', 'wicket-finance'); ?></h4>
             <p>
                 <label>
-                    <?php esc_html_e('GL Code:', 'wicket-finance'); ?>
+                    <?php /* translators: Order line item field label. GL is short for general ledger. */ esc_html_e('GL Code:', 'wicket-finance'); ?>
                     <input type="text" name="wicket_finance_gl_code[<?php echo esc_attr($item_id); ?>]" value="<?php echo esc_attr($gl_code); ?>" readonly style="background: #eee;">
                 </label>
             </p>
             <p>
                 <label>
-                    <?php esc_html_e('Term Start Date:', 'wicket-finance'); ?>
+                    <?php /* translators: Order line item field label. Term: the period the purchase covers. */ esc_html_e('Term Start Date:', 'wicket-finance'); ?>
                     <input type="date" name="wicket_finance_start_date[<?php echo esc_attr($item_id); ?>]" value="<?php echo esc_attr($start_date); ?>" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
                 </label>
             </p>
             <p>
                 <label>
-                    <?php esc_html_e('Term End Date:', 'wicket-finance'); ?>
+                    <?php /* translators: Order line item field label. Term: the period the purchase covers. */ esc_html_e('Term End Date:', 'wicket-finance'); ?>
                     <input type="date" name="wicket_finance_end_date[<?php echo esc_attr($item_id); ?>]" value="<?php echo esc_attr($end_date); ?>" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
                 </label>
             </p>

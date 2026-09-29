@@ -70,8 +70,11 @@ class WooExportAdapter
      */
     public function add_export_columns(array $columns): array
     {
+        /* translators: Export column name. GL is short for general ledger (accounting account code). */
         $columns['wicket_finance_gl_code'] = __('Finance GL Code', 'wicket-finance');
+        /* translators: Export column name. Term: the period the purchase covers (e.g. a membership term). */
         $columns['wicket_finance_start_date'] = __('Finance Term Start Date', 'wicket-finance');
+        /* translators: Export column name. Term: the period the purchase covers (e.g. a membership term). */
         $columns['wicket_finance_end_date'] = __('Finance Term End Date', 'wicket-finance');
 
         return $columns;
@@ -85,8 +88,11 @@ class WooExportAdapter
      */
     public function add_product_export_columns(array $columns): array
     {
+        /* translators: Export column name. GL is short for general ledger (accounting account code). */
         $columns['wicket_finance_gl_code'] = __('GL Code', 'wicket-finance');
+        /* translators: Export column name. Term: the period the purchase covers (e.g. a membership term). */
         $columns['wicket_finance_term_start'] = __('Term Start Date', 'wicket-finance');
+        /* translators: Export column name. Term: the period the purchase covers (e.g. a membership term). */
         $columns['wicket_finance_term_end'] = __('Term End Date', 'wicket-finance');
 
         return $columns;

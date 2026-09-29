@@ -116,6 +116,7 @@ class FinanceMeta
                 <?php
                 woocommerce_wp_text_input([
                     'id' => '_wicket_finance_gl_code',
+                    /* translators: Product field label. GL is short for general ledger (accounting account code). */
                     'label' => __('GL Code', 'wicket-finance'),
                     'desc_tip' => true,
                     'description' => __('GL mapping from your financial management system.', 'wicket-finance'),
