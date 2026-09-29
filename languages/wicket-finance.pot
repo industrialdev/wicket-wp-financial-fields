@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T18:58:31+00:00\n"
+"POT-Creation-Date: 2026-09-29T20:11:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wicket-finance\n"
@@ -36,15 +36,18 @@ msgstr ""
 
 #. translators: Label shown to customers, followed by a date. Term: the period the purchase covers.
 #. translators: Order line item field label. Term: the period the purchase covers.
+msgctxt "label"
 msgid "Term Start Date:"
 msgstr ""
 
 #. translators: Label shown to customers, followed by a date. Term: the period the purchase covers.
 #. translators: Order line item field label. Term: the period the purchase covers.
+msgctxt "label"
 msgid "Term End Date:"
 msgstr ""
 
 #. translators: Export column name. GL is short for general ledger (accounting account code).
+msgctxt "label"
 msgid "Finance GL Code"
 msgstr ""
 
@@ -58,92 +61,96 @@ msgstr ""
 
 #. translators: Export column name. GL is short for general ledger (accounting account code).
 #. translators: Product field label. GL is short for general ledger (accounting account code).
+msgctxt "label"
 msgid "GL Code"
 msgstr ""
 
 #. translators: Export column name. Term: the period the purchase covers (e.g. a membership term).
+msgctxt "label"
 msgid "Term Start Date"
 msgstr ""
 
 #. translators: Export column name. Term: the period the purchase covers (e.g. a membership term).
+msgctxt "label"
 msgid "Term End Date"
 msgstr ""
 
-msgctxt "order note author for automatic changes"
+msgctxt "order note author"
 msgid "System (Membership Created)"
 msgstr ""
 
-msgctxt "order note author for automatic changes"
+msgctxt "order note author"
 msgid "System"
 msgstr ""
 
+msgctxt "label"
 msgid "Finance Fields"
 msgstr ""
 
 #. translators: Order line item field label. GL is short for general ledger.
+msgctxt "label"
 msgid "GL Code:"
 msgstr ""
 
-msgctxt "order line item term date validation error"
 msgid "Finance: End date must be the same as or later than start date."
 msgstr ""
 
 msgid "Finance: End date is required when start date is set."
 msgstr ""
 
-msgctxt "order note change"
 msgid "GL Code: auto-populated from product"
 msgstr ""
 
 #. translators: 1: user or system name, 2: comma-separated list of changes.
 #, php-format
-msgctxt "order note summary"
+msgctxt "order note"
 msgid "[%1$s] changed %2$s"
 msgstr ""
 
 #. translators: 1: previous date, 2: new date.
 #, php-format
-msgctxt "order note change"
+msgctxt "order note"
 msgid "Term Start Date: %1$s → %2$s"
 msgstr ""
 
-msgctxt "order note placeholder for a blank date"
+msgctxt "value placeholder"
 msgid "empty"
 msgstr ""
 
 #. translators: 1: previous date, 2: new date.
 #, php-format
-msgctxt "order note change"
+msgctxt "order note"
 msgid "Term End Date: %1$s → %2$s"
 msgstr ""
 
+msgctxt "label"
 msgid "Finance Mapping"
 msgstr ""
 
 msgid "GL mapping from your financial management system."
 msgstr ""
 
+msgctxt "label"
 msgid "Deferred revenue required"
 msgstr ""
 
 msgid "Select if this product will use a deferred revenue schedule in your financial management system."
 msgstr ""
 
+msgctxt "label"
 msgid "Deferral Start Date"
 msgstr ""
 
+msgctxt "label"
 msgid "Deferral End Date"
 msgstr ""
 
-msgctxt "product deferral date validation error"
 msgid "Deferral End Date is required when Deferral Start Date is set."
 msgstr ""
 
-msgctxt "product deferral date validation error"
 msgid "Deferral Start Date is required when Deferral End Date is set."
 msgstr ""
 
-msgctxt "product deferral date validation error"
 msgid "Deferral End Date must be the same as or later than Deferral Start Date."
 msgstr ""
 
@@ -152,98 +159,85 @@ msgstr ""
 
 #. translators: %s: validation error message.
 #, php-format
-msgctxt "validation error prefix"
+msgctxt "message"
 msgid "Finance: %s"
 msgstr ""
 
 #. translators: 1: variation number, 2: validation message
 #, php-format
+msgctxt "message"
 msgid "Variation #%1$d: %2$s"
 msgstr ""
 
-msgctxt "settings tab label"
+msgctxt "label"
 msgid "Finance"
 msgstr ""
 
-msgctxt "finance settings section heading"
 msgid "Revenue Deferral Dates — Feature Control"
 msgstr ""
 
-msgctxt "finance settings checkbox label"
 msgid "Enable Finance Mapping System"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "Enable the entire finance mapping and deferral dates system."
 msgstr ""
 
-msgctxt "finance settings section heading"
 msgid "Revenue Deferral Dates — Customer Visibility"
 msgstr ""
 
-msgctxt "finance settings field label"
 msgid "Product Categories for Customer Display"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "Select product categories that should display deferral dates to customers. Only products in these categories will show deferral dates on customer-facing surfaces."
 msgstr ""
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "Order Confirmation Page"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates on the order confirmation page."
 msgstr ""
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "Email Notifications"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in email notifications (Pending payment, On hold, Processing, Completed, Renewal)."
 msgstr ""
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "My Account › Orders"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in the My Account order details view."
 msgstr ""
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "Subscriptions Details"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in subscription details (WooCommerce Subscriptions required)."
 msgstr ""
 
-msgctxt "finance settings display location label"
+msgctxt "label"
 msgid "PDF Invoices"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "Display deferral dates in PDF invoices (supported invoice plugin required)."
 msgstr ""
 
-msgctxt "finance settings section heading"
 msgid "Revenue Deferral Dates — Dynamic Deferral Dates Trigger"
 msgstr ""
 
-msgctxt "finance settings section help text"
 msgid "Determines the WooCommerce order status that triggers dynamic deferral dates to be written. Regardless of this setting, dates will always be written when the order reaches \"Processing\" status."
 msgstr ""
 
 #. translators: %s: order status name.
 #, php-format
-msgctxt "finance settings required order status label"
+msgctxt "label"
 msgid "%s (Required)"
 msgstr ""
 
-msgctxt "finance settings field description"
 msgid "This option is always enabled and cannot be disabled."
 msgstr ""
 
@@ -253,7 +247,6 @@ msgstr ""
 
 #. translators: %s: order status name.
 #, php-format
-msgctxt "finance settings field description"
 msgid "Write dynamic deferral dates when order status changes to %s."
 msgstr ""
 
@@ -264,12 +257,12 @@ msgstr ""
 
 #. translators: %s: required plugin name.
 #, php-format
-msgctxt "plugin activation error message"
 msgid "Wicket Financial Fields requires %s to be installed and activated."
 msgstr ""
 
 msgid "Wicket Financial Fields requires PHP 8.3 or higher. Please upgrade your PHP version."
 msgstr ""
 
+msgctxt "label"
 msgid "Plugin Activation Error"
 msgstr ""

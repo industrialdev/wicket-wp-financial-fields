@@ -158,22 +158,22 @@ class LineItemMeta
 
         ?>
         <div class="wicket-finance-line-item-meta" style="margin-top: 10px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;">
-            <h4><?php esc_html_e('Finance Fields', 'wicket-finance'); ?></h4>
+            <h4><?php echo esc_html_x('Finance Fields', 'label', 'wicket-finance'); ?></h4>
             <p>
                 <label>
-                    <?php /* translators: Order line item field label. GL is short for general ledger. */ esc_html_e('GL Code:', 'wicket-finance'); ?>
+                    <?php /* translators: Order line item field label. GL is short for general ledger. */ echo esc_html_x('GL Code:', 'label', 'wicket-finance'); ?>
                     <input type="text" name="wicket_finance_gl_code[<?php echo esc_attr($item_id); ?>]" value="<?php echo esc_attr($gl_code); ?>" readonly style="background: #eee;">
                 </label>
             </p>
             <p>
                 <label>
-                    <?php /* translators: Order line item field label. Term: the period the purchase covers. */ esc_html_e('Term Start Date:', 'wicket-finance'); ?>
+                    <?php /* translators: Order line item field label. Term: the period the purchase covers. */ echo esc_html_x('Term Start Date:', 'label', 'wicket-finance'); ?>
                     <input type="date" name="wicket_finance_start_date[<?php echo esc_attr($item_id); ?>]" value="<?php echo esc_attr($start_date); ?>" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
                 </label>
             </p>
             <p>
                 <label>
-                    <?php /* translators: Order line item field label. Term: the period the purchase covers. */ esc_html_e('Term End Date:', 'wicket-finance'); ?>
+                    <?php /* translators: Order line item field label. Term: the period the purchase covers. */ echo esc_html_x('Term End Date:', 'label', 'wicket-finance'); ?>
                     <input type="date" name="wicket_finance_end_date[<?php echo esc_attr($item_id); ?>]" value="<?php echo esc_attr($end_date); ?>" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
                 </label>
             </p>
@@ -218,7 +218,7 @@ class LineItemMeta
             // Validate date range
             if (!empty($new_start) && !empty($new_end)) {
                 if (!$this->date_formatter->validate_date_range($new_start, $new_end)) {
-                    wc_add_notice(_x('Finance: End date must be the same as or later than start date.', 'order line item term date validation error', 'wicket-finance'), 'error');
+                    wc_add_notice(__('Finance: End date must be the same as or later than start date.', 'wicket-finance'), 'error');
                     continue;
                 }
             }
@@ -250,7 +250,7 @@ class LineItemMeta
                     $gl_code = $this->product_meta->get_gl_code($product);
                     if (!empty($gl_code)) {
                         $item->update_meta_data('_wicket_finance_gl_code', $gl_code);
-                        $changes[] = _x('GL Code: auto-populated from product', 'order note change', 'wicket-finance');
+                        $changes[] = __('GL Code: auto-populated from product', 'wicket-finance');
                     }
                 }
             }
@@ -260,7 +260,7 @@ class LineItemMeta
 
                 // Add audit note
                 $user = wp_get_current_user();
-                $user_name = $user->exists() ? $user->display_name : _x('System', 'order note author for automatic changes', 'wicket-finance');
+                $user_name = $user->exists() ? $user->display_name : _x('System', 'order note author', 'wicket-finance');
 
                 $note = $this->format_change_note($user_name, $changes);
 
@@ -353,7 +353,7 @@ class LineItemMeta
     {
         return sprintf(
             /* translators: 1: user or system name, 2: comma-separated list of changes. */
-            _x('[%1$s] changed %2$s', 'order note summary', 'wicket-finance'),
+            _x('[%1$s] changed %2$s', 'order note', 'wicket-finance'),
             $author,
             implode(', ', $changes)
         );
@@ -370,9 +370,9 @@ class LineItemMeta
     {
         return sprintf(
             /* translators: 1: previous date, 2: new date. */
-            _x('Term Start Date: %1$s → %2$s', 'order note change', 'wicket-finance'),
-            (string) $old ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance'),
-            (string) $new ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance')
+            _x('Term Start Date: %1$s → %2$s', 'order note', 'wicket-finance'),
+            (string) $old ?: _x('empty', 'value placeholder', 'wicket-finance'),
+            (string) $new ?: _x('empty', 'value placeholder', 'wicket-finance')
         );
     }
 
@@ -387,9 +387,9 @@ class LineItemMeta
     {
         return sprintf(
             /* translators: 1: previous date, 2: new date. */
-            _x('Term End Date: %1$s → %2$s', 'order note change', 'wicket-finance'),
-            (string) $old ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance'),
-            (string) $new ?: _x('empty', 'order note placeholder for a blank date', 'wicket-finance')
+            _x('Term End Date: %1$s → %2$s', 'order note', 'wicket-finance'),
+            (string) $old ?: _x('empty', 'value placeholder', 'wicket-finance'),
+            (string) $new ?: _x('empty', 'value placeholder', 'wicket-finance')
         );
     }
 }

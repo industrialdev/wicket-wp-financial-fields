@@ -87,7 +87,7 @@ class FinanceMeta
     public function add_finance_mapping_tab(array $tabs): array
     {
         $tabs['wicket_finance_mapping'] = [
-            'label' => __('Finance Mapping', 'wicket-finance'),
+            'label' => _x('Finance Mapping', 'label', 'wicket-finance'),
             'target' => 'wicket_finance_mapping_data',
             'class' => ['show_if_simple', 'show_if_variable', 'show_if_subscription', 'show_if_variable-subscription'],
             'priority' => 60,
@@ -117,7 +117,7 @@ class FinanceMeta
                 woocommerce_wp_text_input([
                     'id' => '_wicket_finance_gl_code',
                     /* translators: Product field label. GL is short for general ledger (accounting account code). */
-                    'label' => __('GL Code', 'wicket-finance'),
+                    'label' => _x('GL Code', 'label', 'wicket-finance'),
                     'desc_tip' => true,
                     'description' => __('GL mapping from your financial management system.', 'wicket-finance'),
                     'type' => 'text',
@@ -126,7 +126,7 @@ class FinanceMeta
 
         woocommerce_wp_checkbox([
             'id' => '_wicket_finance_deferred_required',
-            'label' => __('Deferred revenue required', 'wicket-finance'),
+            'label' => _x('Deferred revenue required', 'label', 'wicket-finance'),
             'description' => __('Select if this product will use a deferred revenue schedule in your financial management system.', 'wicket-finance'),
             'value' => $product->get_meta('_wicket_finance_deferred_required', true) === 'yes' ? 'yes' : 'no',
         ]);
@@ -160,7 +160,7 @@ class FinanceMeta
             <?php
             woocommerce_wp_text_input([
                 'id' => '_wicket_finance_deferral_start_date',
-                'label' => __('Deferral Start Date', 'wicket-finance'),
+                'label' => _x('Deferral Start Date', 'label', 'wicket-finance'),
                 'type' => 'date',
                 'value' => $product->get_meta('_wicket_finance_deferral_start_date', true),
                 'wrapper_class' => 'wicket-finance-deferral-date-field wicket-finance-deferral-date-field-start',
@@ -173,7 +173,7 @@ class FinanceMeta
 
         woocommerce_wp_text_input([
             'id' => '_wicket_finance_deferral_end_date',
-            'label' => __('Deferral End Date', 'wicket-finance'),
+            'label' => _x('Deferral End Date', 'label', 'wicket-finance'),
             'type' => 'date',
             'value' => $product->get_meta('_wicket_finance_deferral_end_date', true),
             'wrapper_class' => 'wicket-finance-deferral-date-field wicket-finance-deferral-date-field-end',
@@ -214,7 +214,7 @@ class FinanceMeta
             woocommerce_wp_text_input([
                 'id' => "_wicket_finance_deferral_start_date_{$loop}",
                 'name' => "variable_wicket_finance_deferral_start_date[{$loop}]",
-                'label' => __('Deferral Start Date', 'wicket-finance'),
+                'label' => _x('Deferral Start Date', 'label', 'wicket-finance'),
                 'type' => 'date',
                 'value' => $variation_obj->get_meta('_wicket_finance_deferral_start_date', true),
                 'wrapper_class' => 'form-row form-row-first wicket-finance-deferral-date-field wicket-finance-deferral-date-field-start',
@@ -228,7 +228,7 @@ class FinanceMeta
         woocommerce_wp_text_input([
             'id' => "_wicket_finance_deferral_end_date_{$loop}",
             'name' => "variable_wicket_finance_deferral_end_date[{$loop}]",
-            'label' => __('Deferral End Date', 'wicket-finance'),
+            'label' => _x('Deferral End Date', 'label', 'wicket-finance'),
             'type' => 'date',
             'value' => $variation_obj->get_meta('_wicket_finance_deferral_end_date', true),
             'wrapper_class' => 'form-row form-row-last wicket-finance-deferral-date-field wicket-finance-deferral-date-field-end',
@@ -273,9 +273,9 @@ class FinanceMeta
         wp_add_inline_script(
             'wicket-finance-product-admin',
             'window.wicketFinanceProductValidation = ' . wp_json_encode([
-                'missingEndMessage' => _x('Deferral End Date is required when Deferral Start Date is set.', 'product deferral date validation error', 'wicket-finance'),
-                'missingStartMessage' => _x('Deferral Start Date is required when Deferral End Date is set.', 'product deferral date validation error', 'wicket-finance'),
-                'invalidRangeMessage' => _x('Deferral End Date must be the same as or later than Deferral Start Date.', 'product deferral date validation error', 'wicket-finance'),
+                'missingEndMessage' => __('Deferral End Date is required when Deferral Start Date is set.', 'wicket-finance'),
+                'missingStartMessage' => __('Deferral Start Date is required when Deferral End Date is set.', 'wicket-finance'),
+                'invalidRangeMessage' => __('Deferral End Date must be the same as or later than Deferral Start Date.', 'wicket-finance'),
                 'noticeMessage' => __('Some finance deferral dates need attention. Start Date and End Date must be entered together, and End Date cannot be earlier than Start Date.', 'wicket-finance'),
             ]) . ';',
             'before'
@@ -424,7 +424,7 @@ class FinanceMeta
 
         if (!empty($start_date) && empty($end_date)) {
             $this->add_product_validation_error($this->get_validation_message(
-                $this->get_finance_error(_x('Deferral End Date is required when Deferral Start Date is set.', 'product deferral date validation error', 'wicket-finance')),
+                $this->get_finance_error(__('Deferral End Date is required when Deferral Start Date is set.', 'wicket-finance')),
                 $loop
             ));
 
@@ -433,7 +433,7 @@ class FinanceMeta
 
         if (!empty($end_date) && empty($start_date)) {
             $this->add_product_validation_error($this->get_validation_message(
-                $this->get_finance_error(_x('Deferral Start Date is required when Deferral End Date is set.', 'product deferral date validation error', 'wicket-finance')),
+                $this->get_finance_error(__('Deferral Start Date is required when Deferral End Date is set.', 'wicket-finance')),
                 $loop
             ));
 
@@ -444,7 +444,7 @@ class FinanceMeta
         if (!empty($start_date) && !empty($end_date)) {
             if (!$this->date_formatter->validate_date_range($start_date, $end_date)) {
                 $this->add_product_validation_error($this->get_validation_message(
-                    $this->get_finance_error(_x('Deferral End Date must be the same as or later than Deferral Start Date.', 'product deferral date validation error', 'wicket-finance')),
+                    $this->get_finance_error(__('Deferral End Date must be the same as or later than Deferral Start Date.', 'wicket-finance')),
                     $loop
                 ));
 
@@ -465,7 +465,7 @@ class FinanceMeta
     {
         return sprintf(
             /* translators: %s: validation error message. */
-            _x('Finance: %s', 'validation error prefix', 'wicket-finance'),
+            _x('Finance: %s', 'message', 'wicket-finance'),
             $message
         );
     }
@@ -504,7 +504,7 @@ class FinanceMeta
 
         return sprintf(
             /* translators: 1: variation number, 2: validation message */
-            __('Variation #%1$d: %2$s', 'wicket-finance'),
+            _x('Variation #%1$d: %2$s', 'message', 'wicket-finance'),
             $loop + 1,
             $message
         );

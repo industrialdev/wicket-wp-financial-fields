@@ -145,7 +145,7 @@ function wicket_finance_missing_plugin_message(string $plugin_name): string
 {
     return esc_html(sprintf(
         /* translators: %s: required plugin name. */
-        _x('Wicket Financial Fields requires %s to be installed and activated.', 'plugin activation error message', 'wicket-finance'),
+        __('Wicket Financial Fields requires %s to be installed and activated.', 'wicket-finance'),
         $plugin_name
     ));
 }
@@ -162,7 +162,7 @@ function wicket_finance_activate(): void
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
             esc_html__('Wicket Financial Fields requires PHP 8.3 or higher. Please upgrade your PHP version.', 'wicket-finance'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }
@@ -172,7 +172,7 @@ function wicket_finance_activate(): void
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
             wicket_finance_missing_plugin_message('WooCommerce'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }
@@ -181,7 +181,7 @@ function wicket_finance_activate(): void
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
             wicket_finance_missing_plugin_message('Wicket Base Plugin'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }
@@ -190,7 +190,7 @@ function wicket_finance_activate(): void
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
             wicket_finance_missing_plugin_message('Wicket Memberships'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }

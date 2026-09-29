@@ -78,7 +78,7 @@ class WPSettingsSettings
 
         $tabs[45] = [
             'key' => 'finance',
-            'label' => _x('Finance', 'settings tab label', 'wicket-finance'),
+            'label' => _x('Finance', 'label', 'wicket-finance'),
             'callback' => [$this, 'register_finance_tab_sections'],
         ];
 
@@ -99,7 +99,7 @@ class WPSettingsSettings
             return $settings;
         }
 
-        $finance_tab = $settings->add_tab(_x('Finance', 'settings tab label', 'wicket-finance'));
+        $finance_tab = $settings->add_tab(_x('Finance', 'label', 'wicket-finance'));
         $this->register_finance_tab_sections($finance_tab);
 
         return $settings;
@@ -117,43 +117,43 @@ class WPSettingsSettings
             return;
         }
 
-        $feature_control_section = $finance_tab->add_section(_x('Revenue Deferral Dates — Feature Control', 'finance settings section heading', 'wicket-finance'));
+        $feature_control_section = $finance_tab->add_section(__('Revenue Deferral Dates — Feature Control', 'wicket-finance'));
 
         $feature_control_section->add_option('checkbox', [
             'name' => 'wicket_finance_enable_system',
-            'label' => _x('Enable Finance Mapping System', 'finance settings checkbox label', 'wicket-finance'),
-            'description' => _x('Enable the entire finance mapping and deferral dates system.', 'finance settings field description', 'wicket-finance'),
+            'label' => __('Enable Finance Mapping System', 'wicket-finance'),
+            'description' => __('Enable the entire finance mapping and deferral dates system.', 'wicket-finance'),
             'default' => '1',
         ]);
 
-        $customer_visibility_section = $finance_tab->add_section(_x('Revenue Deferral Dates — Customer Visibility', 'finance settings section heading', 'wicket-finance'));
+        $customer_visibility_section = $finance_tab->add_section(__('Revenue Deferral Dates — Customer Visibility', 'wicket-finance'));
 
         $customer_visibility_section->add_option('select-multiple', [
             'name' => 'wicket_finance_customer_visible_categories',
-            'label' => _x('Product Categories for Customer Display', 'finance settings field label', 'wicket-finance'),
-            'description' => _x('Select product categories that should display deferral dates to customers. Only products in these categories will show deferral dates on customer-facing surfaces.', 'finance settings field description', 'wicket-finance'),
+            'label' => __('Product Categories for Customer Display', 'wicket-finance'),
+            'description' => __('Select product categories that should display deferral dates to customers. Only products in these categories will show deferral dates on customer-facing surfaces.', 'wicket-finance'),
             'options' => $this->get_product_categories(),
             'default' => [],
         ]);
 
         $customer_visibility_section->add_option('checkbox', [
             'name' => 'wicket_finance_display_order_confirmation',
-            'label' => _x('Order Confirmation Page', 'finance settings display location label', 'wicket-finance'),
-            'description' => _x('Display deferral dates on the order confirmation page.', 'finance settings field description', 'wicket-finance'),
+            'label' => _x('Order Confirmation Page', 'label', 'wicket-finance'),
+            'description' => __('Display deferral dates on the order confirmation page.', 'wicket-finance'),
             'default' => '0',
         ]);
 
         $customer_visibility_section->add_option('checkbox', [
             'name' => 'wicket_finance_display_emails',
-            'label' => _x('Email Notifications', 'finance settings display location label', 'wicket-finance'),
-            'description' => _x('Display deferral dates in email notifications (Pending payment, On hold, Processing, Completed, Renewal).', 'finance settings field description', 'wicket-finance'),
+            'label' => _x('Email Notifications', 'label', 'wicket-finance'),
+            'description' => __('Display deferral dates in email notifications (Pending payment, On hold, Processing, Completed, Renewal).', 'wicket-finance'),
             'default' => '0',
         ]);
 
         $customer_visibility_section->add_option('checkbox', [
             'name' => 'wicket_finance_display_my_account',
-            'label' => _x('My Account › Orders', 'finance settings display location label', 'wicket-finance'),
-            'description' => _x('Display deferral dates in the My Account order details view.', 'finance settings field description', 'wicket-finance'),
+            'label' => _x('My Account › Orders', 'label', 'wicket-finance'),
+            'description' => __('Display deferral dates in the My Account order details view.', 'wicket-finance'),
             'default' => '0',
         ]);
 
@@ -164,8 +164,8 @@ class WPSettingsSettings
         if (function_exists('is_plugin_active') && is_plugin_active('woocommerce-subscriptions/woocommerce-subscriptions.php')) {
             $customer_visibility_section->add_option('checkbox', [
                 'name' => 'wicket_finance_display_subscriptions',
-                'label' => _x('Subscriptions Details', 'finance settings display location label', 'wicket-finance'),
-                'description' => _x('Display deferral dates in subscription details (WooCommerce Subscriptions required).', 'finance settings field description', 'wicket-finance'),
+                'label' => _x('Subscriptions Details', 'label', 'wicket-finance'),
+                'description' => __('Display deferral dates in subscription details (WooCommerce Subscriptions required).', 'wicket-finance'),
                 'default' => '0',
             ]);
         }
@@ -173,18 +173,18 @@ class WPSettingsSettings
         if ($this->has_supported_invoice_plugin()) {
             $customer_visibility_section->add_option('checkbox', [
                 'name' => 'wicket_finance_display_pdf_invoices',
-                'label' => _x('PDF Invoices', 'finance settings display location label', 'wicket-finance'),
-                'description' => _x('Display deferral dates in PDF invoices (supported invoice plugin required).', 'finance settings field description', 'wicket-finance'),
+                'label' => _x('PDF Invoices', 'label', 'wicket-finance'),
+                'description' => __('Display deferral dates in PDF invoices (supported invoice plugin required).', 'wicket-finance'),
                 'default' => '0',
             ]);
         }
 
-        $dynamic_trigger_section = $finance_tab->add_section(_x('Revenue Deferral Dates — Dynamic Deferral Dates Trigger', 'finance settings section heading', 'wicket-finance'));
+        $dynamic_trigger_section = $finance_tab->add_section(__('Revenue Deferral Dates — Dynamic Deferral Dates Trigger', 'wicket-finance'));
 
         $dynamic_trigger_section->add_option('text', [
             'name' => 'wicket_finance_dynamic_trigger_help',
             'render' => function () {
-                return '<p><em>' . esc_html_x('Determines the WooCommerce order status that triggers dynamic deferral dates to be written. Regardless of this setting, dates will always be written when the order reaches "Processing" status.', 'finance settings section help text', 'wicket-finance') . '</em></p>';
+                return '<p><em>' . esc_html__('Determines the WooCommerce order status that triggers dynamic deferral dates to be written. Regardless of this setting, dates will always be written when the order reaches "Processing" status.', 'wicket-finance') . '</em></p>';
             },
         ]);
 
@@ -213,11 +213,11 @@ class WPSettingsSettings
             'name' => 'wicket_finance_trigger_processing',
             'label' => sprintf(
                 /* translators: %s: order status name. */
-                _x('%s (Required)', 'finance settings required order status label', 'wicket-finance'),
+                _x('%s (Required)', 'label', 'wicket-finance'),
                 $this->get_order_status_label(FinanceSettings::STATUS_PROCESSING)
             ),
             'description' => $this->get_trigger_description(FinanceSettings::STATUS_PROCESSING)
-                . ' ' . _x('This option is always enabled and cannot be disabled.', 'finance settings field description', 'wicket-finance'),
+                . ' ' . __('This option is always enabled and cannot be disabled.', 'wicket-finance'),
             'default' => '1',
             'attributes' => [
                 'disabled' => 'disabled',
@@ -267,7 +267,7 @@ class WPSettingsSettings
     {
         return sprintf(
             /* translators: %s: order status name. */
-            _x('Write dynamic deferral dates when order status changes to %s.', 'finance settings field description', 'wicket-finance'),
+            __('Write dynamic deferral dates when order status changes to %s.', 'wicket-finance'),
             $this->get_order_status_label($status)
         );
     }
