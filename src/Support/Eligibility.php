@@ -211,8 +211,15 @@ class Eligibility
 
         $selected_categories = $options['wicket_show_mship_order_org_search']['categorychoice'] ?? [];
 
-        // Normalize and ensure we only return valid IDs.
-        $this->membership_category_ids = array_values(array_filter(array_map('absint', (array) $selected_categories)));
+        // Normalize and keep only valid positive IDs. A negative stored value
+        // is bad data: it must fail eligibility, not alias a positive category
+        // through absint().
+        $this->membership_category_ids = array_values(
+            array_filter(
+                array_map('intval', (array) $selected_categories),
+                fn ($id): bool => $id > 0
+            )
+        );
 
         return $this->membership_category_ids;
     }
