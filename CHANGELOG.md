@@ -5,6 +5,15 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 <!-- new releases inserted below this line -->
 
+## [1.0.17] - 2026-10-02
+
+### Fixed
+- **eligibility:** drop negative category ids instead of absint-mapping them (WWID-2665)
+
+### Maintenance
+- **ci:** fail closed when main moves before release push
+
+
 ## [1.0.16] - 2026-09-03
 
 ### Fixed
