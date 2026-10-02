@@ -185,8 +185,8 @@ class CustomerRenderer
 
         ?>
         <div class="wicket-finance-dates" style="margin-top: 5px; font-size: 0.9em;">
-            <div><strong><?php esc_html_e('Term Start Date:', 'wicket-finance'); ?></strong> <?php echo esc_html($formatted_start); ?></div>
-            <div><strong><?php esc_html_e('Term End Date:', 'wicket-finance'); ?></strong> <?php echo esc_html($formatted_end); ?></div>
+            <div><strong><?php /* translators: Label shown to customers, followed by a date. Term: the period the purchase covers. */ echo esc_html_x('Term Start Date:', 'label', 'wicket-finance'); ?></strong> <?php echo esc_html($formatted_start); ?></div>
+            <div><strong><?php echo esc_html_x('Term End Date:', 'label', 'wicket-finance'); ?></strong> <?php echo esc_html($formatted_end); ?></div>
         </div>
         <?php
     }
