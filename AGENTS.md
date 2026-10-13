@@ -24,6 +24,7 @@ Wicket Financial Fields is a WordPress/WooCommerce plugin for finance mapping an
 
 **Product/**: Product-level finance configuration
 - `FinanceMeta`: Product data fields (GL code, deferred GL, deferred revenue flag, deferral dates)
+- `MetaAliases`: Redirects site-declared legacy meta keys to canonical finance keys (`wicket/finance/meta_aliases` filter)
 
 **Order/**: Order line item management + membership integration
 - `LineItemMeta`: Line item CRUD, validation, audit notes
