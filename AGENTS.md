@@ -130,6 +130,7 @@ Brain/Monkey used for WP function mocking in unit tests.
 
 **Filters:**
 - `wicket/finance/membership_categories` - Extend membership category slugs (default: ['membership'])
+- `wicket/finance/meta_aliases` - Map legacy meta keys to canonical finance keys (single-valued keys; writes on products are redirected at the metadata layer)
 - `wicket/finance/debug_enabled` - Enable debug logging
 
 **Constants:**
