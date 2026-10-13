@@ -302,9 +302,29 @@
         document.addEventListener('click', handleSaveClick, true);
     }
 
+    function initDeferredGlToggle() {
+        const checkbox = document.querySelector('#_wicket_finance_deferred_required');
+        const field = document.querySelector('.wicket-finance-gl-deferred-field');
+
+        if (!checkbox || !field) {
+            return;
+        }
+
+        const updateVisibility = () => {
+            field.classList.toggle('wicket-finance-hidden', !checkbox.checked);
+        };
+
+        updateVisibility();
+        checkbox.addEventListener('change', updateVisibility);
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initValidation);
+        document.addEventListener('DOMContentLoaded', () => {
+            initValidation();
+            initDeferredGlToggle();
+        });
     } else {
         initValidation();
+        initDeferredGlToggle();
     }
 })();

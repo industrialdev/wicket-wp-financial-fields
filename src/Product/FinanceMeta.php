@@ -13,10 +13,12 @@ use Wicket\Finance\Support\Logger;
  * Manages Finance Mapping tab in WooCommerce products:
  * - GL Code (parent level)
  * - Deferred revenue required (parent level)
+ * - Deferred GL (parent level)
  * - Deferral start/end dates (Simple: General tab, Variable: per variation)
  *
  * Meta keys:
  * - _wicket_finance_gl_code
+ * - _wicket_finance_gl_deferred
  * - _wicket_finance_deferred_required
  * - _wicket_finance_deferral_start_date
  * - _wicket_finance_deferral_end_date
@@ -128,6 +130,18 @@ class FinanceMeta
             'label' => __('Deferred revenue required', 'wicket-finance'),
             'description' => __('Select if this product will use a deferred revenue schedule in your financial management system.', 'wicket-finance'),
             'value' => $product->get_meta('_wicket_finance_deferred_required', true) === 'yes' ? 'yes' : 'no',
+        ]);
+
+        $deferred_required = $product->get_meta('_wicket_finance_deferred_required', true) === 'yes';
+
+        woocommerce_wp_text_input([
+            'id' => '_wicket_finance_gl_deferred',
+            'label' => __('Deferred GL', 'wicket-finance'),
+            'desc_tip' => true,
+            'description' => __('Deferred GL mapping from your financial management system.', 'wicket-finance'),
+            'type' => 'text',
+            'value' => $product->get_meta('_wicket_finance_gl_deferred', true),
+            'wrapper_class' => 'wicket-finance-gl-deferred-field' . ($deferred_required ? '' : ' wicket-finance-hidden'),
         ]);
         ?>
             </div>
@@ -340,6 +354,12 @@ class FinanceMeta
         if (isset($_POST['_wicket_finance_gl_code'])) {
             $gl_code = sanitize_text_field(wp_unslash($_POST['_wicket_finance_gl_code']));
             $product->update_meta_data('_wicket_finance_gl_code', $gl_code);
+        }
+
+        // Save Deferred GL (kept when the deferred checkbox is unchecked)
+        if (isset($_POST['_wicket_finance_gl_deferred'])) {
+            $gl_deferred = sanitize_text_field(wp_unslash($_POST['_wicket_finance_gl_deferred']));
+            $product->update_meta_data('_wicket_finance_gl_deferred', $gl_deferred);
         }
 
         // Save deferred required flag

@@ -12,3 +12,8 @@ p.wicket-finance-field-error {
 .wicket-finance-product-notice {
     margin-top: 12px;
 }
+
+/* Deferred GL visibility tracks the Deferred revenue required checkbox. */
+.wicket-finance-hidden {
+    display: none;
+}
