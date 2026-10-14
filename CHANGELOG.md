@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 <!-- new releases inserted below this line -->
 
+## [1.0.18] - 2026-10-14
+
+### Changed
+- **eligibility:** read membership categories through Wicket Memberships helper
+
+
 ## [1.0.17] - 2026-10-02
 
 ### Fixed
