@@ -196,8 +196,8 @@ class Eligibility
     /**
      * Gets membership category IDs from the membership plugin options.
      *
-     * Reads wicket_membership_plugin_options[wicket_show_mship_order_org_search][categorychoice][]
-     * and caches the result for reuse.
+     * Uses Wicket Memberships' Membership Categories via Helper::get_membership_category_ids(),
+     * which handles its own legacy-key fallback. Caches the result for reuse.
      *
      * @return array Array of category IDs.
      */
@@ -207,9 +207,13 @@ class Eligibility
             return $this->membership_category_ids;
         }
 
-        $options = get_option('wicket_membership_plugin_options', []);
-
-        $selected_categories = $options['wicket_show_mship_order_org_search']['categorychoice'] ?? [];
+        if (defined('WICKET_MEMBERSHIP_PLUGIN_FILE') && method_exists('\\Wicket_Memberships\\Helper', 'get_membership_category_ids')) {
+            $selected_categories = \Wicket_Memberships\Helper::get_membership_category_ids();
+        } else {
+            // Fallback: Wicket Memberships inactive or older than the getter, so read its stored option directly.
+            $options = get_option('wicket_membership_plugin_options', []);
+            $selected_categories = $options['wicket_show_mship_order_org_search']['categorychoice'] ?? [];
+        }
 
         // Normalize and keep only valid positive IDs. A negative stored value
         // is bad data: it must fail eligibility, not alias a positive category
