@@ -5,6 +5,17 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 <!-- new releases inserted below this line -->
 
+## [1.1.0] - 2026-10-15
+
+### Added
+- **product:** add legacy meta alias redirect hook (WWID-2718)
+- **product:** add Deferred GL field to Finance tab (WWID-2718)
+
+### Fixed
+- **product:** converge legacy meta rows through by-mid redirects (WWID-2718)
+- **product:** harden the meta alias redirect seam (WWID-2718)
+
+
 ## [1.0.18] - 2026-10-14
 
 ### Changed
