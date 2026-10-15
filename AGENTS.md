@@ -23,7 +23,8 @@ Wicket Financial Fields is a WordPress/WooCommerce plugin for finance mapping an
 - `WPSettingsSettings`: Admin UI registration (hooks into Wicket Settings)
 
 **Product/**: Product-level finance configuration
-- `FinanceMeta`: Product data fields (GL code, deferred revenue flag, deferral dates)
+- `FinanceMeta`: Product data fields (GL code, deferred GL, deferred revenue flag, deferral dates)
+- `MetaAliases`: Redirects site-declared legacy meta keys to canonical finance keys (`wicket/finance/meta_aliases` filter)
 
 **Order/**: Order line item management + membership integration
 - `LineItemMeta`: Line item CRUD, validation, audit notes
@@ -47,6 +48,7 @@ Wicket Financial Fields is a WordPress/WooCommerce plugin for finance mapping an
 
 **Product Meta:**
 - `_wicket_finance_gl_code`
+- `_wicket_finance_gl_deferred`
 - `_wicket_finance_deferred_required`
 - `_wicket_finance_deferral_start_date`
 - `_wicket_finance_deferral_end_date`
@@ -128,6 +130,7 @@ Brain/Monkey used for WP function mocking in unit tests.
 
 **Filters:**
 - `wicket/finance/membership_categories` - Extend membership category slugs (default: ['membership'])
+- `wicket/finance/meta_aliases` - Map legacy meta keys to canonical finance keys (single-valued keys; writes on products are redirected at the metadata layer)
 - `wicket/finance/debug_enabled` - Enable debug logging
 
 **Constants:**

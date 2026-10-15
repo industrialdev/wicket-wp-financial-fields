@@ -9,6 +9,7 @@ use Wicket\Finance\Export\WooExportAdapter;
 use Wicket\Finance\Order\DynamicDates;
 use Wicket\Finance\Order\LineItemMeta;
 use Wicket\Finance\Product\FinanceMeta;
+use Wicket\Finance\Product\MetaAliases;
 use Wicket\Finance\Settings\FinanceSettings;
 use Wicket\Finance\Settings\WPSettingsSettings;
 use Wicket\Finance\Support\DateFormatter;
@@ -80,6 +81,13 @@ class Plugin
      * @var FinanceMeta|null
      */
     private $product_meta;
+
+    /**
+     * Legacy meta alias redirector.
+     *
+     * @var MetaAliases|null
+     */
+    private $meta_aliases;
 
     /**
      * Line item meta service.
@@ -162,6 +170,10 @@ class Plugin
         // Initialize product meta (Finance Mapping tab)
         $this->product_meta = new FinanceMeta($date_formatter, $this->logger);
         $this->product_meta->init();
+
+        // Initialize legacy meta alias redirector (wicket/finance/meta_aliases)
+        $this->meta_aliases = new MetaAliases($this->logger);
+        $this->meta_aliases->init();
 
         // Initialize order line item meta
         $this->line_item_meta = new LineItemMeta($this->product_meta, $date_formatter, $this->logger);

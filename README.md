@@ -158,6 +158,7 @@ All changes create audit notes with user and timestamp.
 
 **Filters:**
 - `wicket/finance/debug_enabled` - Enable debug logging
+- `wicket/finance/meta_aliases` - Map legacy meta keys to canonical finance keys; matching product writes are redirected at the metadata layer
 
 **Constants:**
 - `WICKET_FINANCE_DEBUG` - Force debug logging on
