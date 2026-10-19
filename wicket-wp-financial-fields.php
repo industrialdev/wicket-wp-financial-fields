@@ -136,6 +136,21 @@ add_action(
 );
 
 /**
+ * Build the activation error message for a missing required plugin.
+ *
+ * @param string $plugin_name Required plugin name.
+ * @return string Escaped message.
+ */
+function wicket_finance_missing_plugin_message(string $plugin_name): string
+{
+    return esc_html(sprintf(
+        /* translators: %s: required plugin name. */
+        __('Wicket Financial Fields requires %s to be installed and activated.', 'wicket-finance'),
+        $plugin_name
+    ));
+}
+
+/**
  * Plugin activation hook.
  *
  * @return void
@@ -147,7 +162,7 @@ function wicket_finance_activate(): void
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
             esc_html__('Wicket Financial Fields requires PHP 8.3 or higher. Please upgrade your PHP version.', 'wicket-finance'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }
@@ -156,8 +171,8 @@ function wicket_finance_activate(): void
     if (!wicket_finance_is_woocommerce_active()) {
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
-            esc_html__('Wicket Financial Fields requires WooCommerce to be installed and activated.', 'wicket-finance'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            wicket_finance_missing_plugin_message('WooCommerce'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }
@@ -165,8 +180,8 @@ function wicket_finance_activate(): void
     if (!wicket_finance_is_base_plugin_active()) {
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
-            esc_html__('Wicket Financial Fields requires Wicket Base Plugin to be installed and activated.', 'wicket-finance'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            wicket_finance_missing_plugin_message('Wicket Base Plugin'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }
@@ -174,8 +189,8 @@ function wicket_finance_activate(): void
     if (!wicket_finance_is_memberships_active()) {
         deactivate_plugins(WICKET_FINANCE_BASENAME);
         wp_die(
-            esc_html__('Wicket Financial Fields requires Wicket Memberships to be installed and activated.', 'wicket-finance'),
-            esc_html__('Plugin Activation Error', 'wicket-finance'),
+            wicket_finance_missing_plugin_message('Wicket Memberships'),
+            esc_html_x('Plugin Activation Error', 'label', 'wicket-finance'),
             ['back_link' => true]
         );
     }
