@@ -286,3 +286,7 @@ GPL v2 or later
 - Dynamic membership date population
 - Customer-facing display with configurable visibility
 - CSV export integration
+
+## Documentation
+
+End-user guides live in the [docs](docs/) folder. Start with [Set Up GL Code Mapping for Products](docs/set-gl-code.md).
