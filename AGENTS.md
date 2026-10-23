@@ -8,6 +8,10 @@ Dependencies: WordPress 6.0+, PHP 8.3+, WooCommerce 10.0+, Wicket Base Plugin (a
 
 For architecture (service layer, data model, key workflows, hooks and filters, important behavior notes, testing setup): `@see atlas://packages/wicket-wp-financial-fields.md`.
 
+## Documentation
+
+The Atlas knowledge base holds the full engineering and product documentation for the whole Wicket stack. Start at `@see atlas://packages/wicket-wp-financial-fields.md` for this package. The repo docs/ folder, when present, holds only public end-consumer guides; engineering material never lives beside the code.
+
 ## Development Commands
 
 ```bash
